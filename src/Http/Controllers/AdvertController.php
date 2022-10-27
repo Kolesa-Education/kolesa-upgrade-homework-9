@@ -20,10 +20,20 @@ class AdvertController
         return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
     }
 
-    public function newAdvert(ServerRequest $request, Response $response) {
+    public function newAdvert(ServerRequest $request, Response $response)
+    {
         $view = Twig::fromRequest($request);
 
         return $view->render($response, 'adverts/new.twig');
+    }
+
+    public function advertPage(ServerRequest $request, Response $response, array $args)
+    {
+        $view = Twig::fromRequest($request);
+        $adId = $args['id'];
+        $advertsRepo = new AdvertRepository();
+        $advert = $advertsRepo->getById($adId);
+        return $view->render($response, 'adverts/advert.twig', ['advert' => $advert]);
     }
 
     public function create(ServerRequest $request, Response $response)

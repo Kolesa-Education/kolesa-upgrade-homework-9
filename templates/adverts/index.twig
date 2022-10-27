@@ -5,7 +5,7 @@
 
     <ul>
         {% for advert in adverts %}
-            <li>{{ advert.getTitle() }}</li>
+            <li>{{ advert.getTitle() }} <a href="/adverts/{{ advert.getId }}/edit"><button style="cursor: pointer;">Редактировать</button></a></li>
         {% endfor %}
     </ul>
 {% endblock %}
