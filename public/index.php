@@ -15,6 +15,9 @@ $app->add(TwigMiddleware::create($app, $twig));
 $app->get('/', Controllers\IndexController::class . ':home');
 $app->get('/adverts', Controllers\AdvertController::class . ':index');
 $app->get('/adverts/new', Controllers\AdvertController::class . ':newAdvert');
+$app->get('/adverts/{id}', Controllers\AdvertController::class . ':advertPage');
+$app->get('/adverts/{id}/edit', Controllers\AdvertController::class . ':advertEdit');
 $app->post('/adverts', Controllers\AdvertController::class . ':create');
+$app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':edit');
 
 $app->run();
