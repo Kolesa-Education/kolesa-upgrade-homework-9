@@ -8,7 +8,7 @@ class AdvertRepository
 {
     private const DB_PATH = '../storage/adverts.json';
 
-    public function getAll()
+    public function getAll(): array
     {
         $result = [];
 
@@ -19,6 +19,9 @@ class AdvertRepository
         return $result;
     }
 
+    /**
+     * @throws \JsonException
+     */
     public function create(array $advertData): Advert {
         $db               = $this->getDB();
         $increment        = array_key_last($db) + 1;
@@ -37,6 +40,6 @@ class AdvertRepository
 
     private function saveDB(array $data):void
     {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        file_put_contents(self::DB_PATH, json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
 }
