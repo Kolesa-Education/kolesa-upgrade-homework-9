@@ -29,8 +29,9 @@
             <label>
                 Категория *
                 <select name="advert[category_id]">
-                    <option value="1">Автомобили</option>
-                    <option value="2">Смартфоны</option>
+                    {% for category in categories %}
+                        <option value={{ category.id }}>{{ category.title }}</option>
+                    {% endfor %}
                 </select>
             </label>
         </div>
