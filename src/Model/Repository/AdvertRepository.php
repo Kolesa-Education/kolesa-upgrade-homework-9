@@ -88,9 +88,4 @@ class AdvertRepository extends BaseRepository
 
         return new Advert($data);
     }
-
-    private function prepareSql(string $sql, array $data): void
-    {
-
-    }
 }
