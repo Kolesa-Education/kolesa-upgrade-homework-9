@@ -3,6 +3,7 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Advert;
+use App\Model\Repository\DBConnect\Connector;
 
 class AdvertRepository
 {
@@ -13,9 +14,9 @@ class AdvertRepository
         $result = [];
 
         foreach ($this->getDB() as $advertData) {
+
             $result[] = new Advert($advertData);
         }
-
         return $result;
     }
 
@@ -25,18 +26,52 @@ class AdvertRepository
         $advertData['id'] = $increment;
         $db[$increment]   = $advertData;
 
-        $this->saveDB($db);
+        $this->saveDB($db, $increment);
+
+        return new Advert($advertData);
+    }
+    public function edit(array $advertData,$id): Advert {
+        $db = $this->getDB();
+        $advertData['id'] = $id;
+        $db[$id]   = $advertData;
+        $this->UpdateDB($db,$id);
 
         return new Advert($advertData);
     }
 
     private function getDB(): array
     {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+        //ЗДЕСЬ РЕАЛИЗАЦИЯ БД
+        $con = new Connector();
+        $result = $con->GetData();
+        // $result = json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+
+        return $result;
     }
 
-    private function saveDB(array $data):void
+    public function getById(int $id): Advert
     {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        $adArray = $this->getDB();
+        for($i = 0; $i<=count($adArray); $i++){
+            if($adArray[$i]['id'] == $id){
+                $advertData = $adArray[$i];
+                return new Advert($advertData);
+            }
+        }
+        
     }
+
+    private function saveDB(array $data,$increment):void
+    {
+        $con = new Connector();
+        $result = $con->CreateData($data[$increment]['title'],$data[$increment]['description'],$data[$increment]['price'],$data[$increment]['id']);
+    }
+
+    private function UpdateDB(array $data,$id):void
+    {
+        $con = new Connector();
+        $result = $con->EditData($data[$id]['title'],$data[$id]['description'],$data[$id]['price'],$id);
+    }
+
+    
 }

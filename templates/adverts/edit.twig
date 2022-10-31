@@ -1,7 +1,7 @@
 {% extends "base.twig" %}
 
 {% block body %}
-    <h1>Подать новое объявление</h1>
+    <h1>Отредактировать объявление {{ id }}</h1>
 
     {% if errors is not empty %}
         <div style="color: red">При сохранении произошла ошибка</div>
@@ -13,7 +13,8 @@
         {% endfor %}
         </ul>
     {% endif %}
-    <form action="/adverts" method="post">
+    <form action="/adverts/{{ id }}/edit" method="post">
+    <input type="hidden" name="_METHOD" value="PATCH">
         <div>
             <label>
                 Заголовок *
@@ -44,6 +45,6 @@
             </label>
         </div>
         <br>
-        <input type="submit" value="Create">
+        <input type="submit" value="edit">
     </form>
 {% endblock %}
