@@ -26,7 +26,7 @@ abstract class BaseRepository
     {
         $result = [];
 
-        $sql = "SELECT * FROM {$this->table};";
+        $sql = "SELECT * FROM {$this->table} WHERE deleted_at IS NULL;";
         $stmt = $this->connection->query($sql);
 
         $records = $stmt->fetchAll(PDO::FETCH_OBJ);
@@ -40,7 +40,7 @@ abstract class BaseRepository
 
     public function getById(int $id)
     {
-        $sql = "SELECT * FROM {$this->table} WHERE id = :id;";
+        $sql = "SELECT * FROM {$this->table} WHERE deleted_at IS NULL AND id = :id;";
         $stmt = $this->connection->prepare($sql);
 
         $stmt->bindValue("id", $id);
