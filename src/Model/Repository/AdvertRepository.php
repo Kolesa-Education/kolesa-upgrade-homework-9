@@ -6,7 +6,11 @@ use App\Model\Entity\Advert;
 
 class AdvertRepository
 {
-    private const DB_PATH = '../storage/adverts.json';
+    // private const DB_PATH = '../storage/adverts.json';
+    private const DB_HOST = 'localhost';
+    private const DB_USER = 'root';
+    private const DB_PASS = '';
+    private const DB_NAME = 'adverts';
 
     public function getAll()
     {
@@ -28,34 +32,57 @@ class AdvertRepository
     }
 
     public function create(array $advertData): Advert {
-        $db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
-        $advertData['id'] = $increment;
-        $db[$increment]   = $advertData;
-
-        $this->saveDB($db);
+        $this->saveDB($advertData);
 
         return new Advert($advertData);
     }
 
     public function edit(array $advertData): Advert {
-        $db        = $this->getDB();
-        $adId      = $advertData['id'];
-        $db[$adId] = $advertData;
-        print_r("db=" . $db);
-        print_r("adId=" . $adId);
-        $this->saveDB($db);
+        $this->saveDB($advertData);
 
         return new Advert($advertData);
     }
 
     private function getDB(): array
     {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+        $link = mysqli_connect(self::DB_HOST, self::DB_USER, self::DB_PASS, self::DB_NAME);
+        if ($link == false){
+            print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
+            return [];
+        }
+        else {
+            print("Соединение установлено успешно");
+        }
+        mysqli_set_charset($link, "utf8");
+
+        $sql = 'SELECT id, title, description, price FROM adverts';
+        $result = mysqli_query($link, $sql);
+        $ads = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        return $ads ?? [];
     }
 
     private function saveDB(array $data):void
     {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        $link = mysqli_connect(self::DB_HOST, self::DB_USER, self::DB_PASS, self::DB_NAME);
+        if ($link == false){
+            print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
+            return;
+        }
+        else {
+            print("Соединение установлено успешно");
+        }
+        mysqli_set_charset($link, "utf8");
+
+        $adTitle = $data['title'];
+        $adDescription = $data['description'];
+        $adPrice = $data['price'];
+        $sql = 'INSERT INTO adverts(title, description, price) 
+                VALUES ' . $adTitle . ', ' . $adDescription .', ' . $adPrice;
+        
+        $result = mysqli_query($link, $sql);
+        if ($result == false) {
+            print("Произошла ошибка при выполнении запроса");
+        }
     }
 }
