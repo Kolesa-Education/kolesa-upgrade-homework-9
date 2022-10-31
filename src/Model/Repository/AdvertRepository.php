@@ -39,4 +39,30 @@ class AdvertRepository
     {
         file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
     }
+
+    public function getAdvertId(int $id): Advert
+    {
+        $advertArray = $this->getDB();
+        $advertDetails = $advertArray[$id];
+        
+        return new Advert($advertDetails);
+    }
+
+
+
+
+
+
+
+    // for editing
+    public function edit(array $advertData): Advert {
+        $db = $this->getDB();
+        $adId = $advertData['id'];
+        $db[$adId] = $advertData;
+        print_r("db=" . $db);
+        print_r("adId=" . $adId);
+        $this->saveDB($db);
+
+        return new Advert($advertData);
+    }
 }

@@ -1,8 +1,38 @@
 {
     "1": {
+        "id": "1",
         "title": "Продам iPhone 8",
         "description": "Батарейка 100%",
-        "price": "80000",
-        "id": 1
+        "price": "00000"
+    },
+    "2": {
+        "title": "Selling Bag",
+        "description": "Big",
+        "price": "6",
+        "id": 2
+    },
+    "3": {
+        "title": "First advert",
+        "description": "testing",
+        "price": "1",
+        "id": 3
+    },
+    "4": {
+        "title": "vhgvhfvghcgn",
+        "description": "nbvnhvnhvn",
+        "price": "1",
+        "id": 4
+    },
+    "5": {
+        "title": "dfcdvcdsav",
+        "description": "dafc",
+        "price": "1",
+        "id": 5
+    },
+    "6": {
+        "title": "Продам iPhone 14",
+        "description": "Big",
+        "price": "3999",
+        "id": 6
     }
 }

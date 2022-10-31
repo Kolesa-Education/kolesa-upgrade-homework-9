@@ -17,4 +17,17 @@ $app->get('/adverts', Controllers\AdvertController::class . ':index');
 $app->get('/adverts/new', Controllers\AdvertController::class . ':newAdvert');
 $app->post('/adverts', Controllers\AdvertController::class . ':create');
 
+//to see adverts one by one
+$app->get('/adverts/{id}', Controllers\AdvertController::class . ':advertDetail');
+//to edit advert
+$app->get('/adverts/{id}/edit', Controllers\AdvertController::class . ':advertEditDisplay');
+$app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':advertEdit');
+
 $app->run();
+
+
+// look into security threats of sql ad format table accordinbgly 
+
+//Connect php code to sql
+//comment current funtions and replace with sql counterparts 
+// create a autoated script for the tester to setup the sql database 
