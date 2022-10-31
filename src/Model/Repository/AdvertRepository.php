@@ -3,40 +3,88 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Advert;
+use PDO;
 
-class AdvertRepository
+class AdvertRepository extends BaseRepository
 {
-    private const DB_PATH = '../storage/adverts.json';
+    public function __construct()
+    {
+        parent::__construct();
+        $this->model = new Advert();
+        $this->table = 'adverts';
+    }
 
-    public function getAll()
+    public function getByCategoryAndTitle(int $categoryId, string $title)
     {
         $result = [];
+        $title = "%$title%";
 
-        foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
+        if ($categoryId != 0) {
+            $sql = "SELECT * FROM {$this->table} WHERE category_id = :category AND title LIKE :title";
+
+            $stmt = $this->connection->prepare($sql);
+
+            $stmt->bindValue("category", $categoryId);
+            $stmt->bindValue("title", $title);
+        } else {
+            $sql = "SELECT * FROM {$this->table} WHERE title LIKE :title";
+
+            $stmt = $this->connection->prepare($sql);
+
+            $stmt->bindValue("title", $title);
+        }
+
+        $stmt->execute();
+
+        $records = $stmt->fetchAll(PDO::FETCH_OBJ);
+
+        foreach ($records as $record) {
+            $result[] = new $this->model(json_decode(json_encode($record),true));
         }
 
         return $result;
     }
 
     public function create(array $advertData): Advert {
-        $db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
-        $advertData['id'] = $increment;
-        $db[$increment]   = $advertData;
+        $sql = "INSERT INTO adverts (title, 
+                                    description, 
+                                    price, 
+                                    category_id
+                                    ) 
+                VALUES (:title, 
+                        :description, 
+                        :price, 
+                        :category_id
+                        )";
 
-        $this->saveDB($db);
+        $this->prepareSql($sql, $advertData);
 
         return new Advert($advertData);
     }
 
-    private function getDB(): array
+    public function update(array $advertData): Advert
     {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+        $sql = "UPDATE adverts 
+                SET title = :title, 
+                    description = :description, 
+                    price = :price, 
+                    category_id = :category_id
+                WHERE id = :id";
+
+        $this->prepareSql($sql, $advertData);
+
+        return new Advert($advertData);
     }
 
-    private function saveDB(array $data):void
+    private function prepareSql(string $sql, array $data): void
     {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        $stmt = $this->connection->prepare($sql);
+
+        $stmt->bindValue("title", $data['title']);
+        $stmt->bindValue("description", $data['description']);
+        $stmt->bindValue("price", $data['price']);
+        $stmt->bindValue("category_id", $data['category_id']);
+
+        $stmt->execute();
     }
 }

@@ -2,24 +2,18 @@
 
 namespace App\Model\Entity;
 
-class Advert
+class Advert extends AbstractModel
 {
-    private ?int    $id;
     private ?string $title;
     private ?string $description;
     private ?int    $price;
 
     public function __construct($data = [])
     {
-        $this->id = $data['id'] ?? null;
+        parent::__construct();
         $this->title = $data['title'] ?? null;
         $this->description = $data['description'] ?? null;
         $this->price = $data['price'] ?? null;
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getTitle(): string

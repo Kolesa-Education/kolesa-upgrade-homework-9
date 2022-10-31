@@ -3,6 +3,20 @@
 {% block body %}
     <h1>Список объявлений</h1>
 
+    <form action="/advert" method="get">
+        <div>
+            <select name="advert[category_id]">
+                <option value="0">Все категории</option>
+                <option value="1">Автомобили</option>
+                <option value="2">Смартфоны</option>
+            </select>
+
+            <input type="text" name="advert[title]" value="{{ data.title ?? '' }}">
+
+            <input type="submit" value="Search">
+        </div>
+    </form>
+
     <ul>
         {% for advert in adverts %}
             <li>{{ advert.getTitle() }}</li>
