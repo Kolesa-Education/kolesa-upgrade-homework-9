@@ -1,4 +1,5 @@
 <?php
+// src/Model/Entity/Advert.php
 
 namespace App\Model\Entity;
 
@@ -35,15 +36,5 @@ class Advert
     public function getPrice(): ?int
     {
         return $this->price;
-    }
-
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->getId(),
-            'title' => $this->getTitle(),
-            'description' => $this->getDescription(),
-            'price' => $this->getPrice(),
-        ];
     }
 }

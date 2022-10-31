@@ -6,18 +6,7 @@ use App\Model\Entity\Advert;
 
 class AdvertRepository
 {
-    private const DB_PATH = '../storage/adverts.json';
-
-    public function getAll()
-    {
-        $result = [];
-
-        foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
-        }
-
-        return $result;
-    }
+   // Другой код
 
     public function create(array $advertData): Advert {
         $db               = $this->getDB();
@@ -37,6 +26,6 @@ class AdvertRepository
 
     private function saveDB(array $data):void
     {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        file_put_contents(self::DB_PATH, json_encode($data));
     }
 }
