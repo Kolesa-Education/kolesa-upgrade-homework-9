@@ -20,7 +20,7 @@
 
     <ul>
         {% for advert in adverts %}
-            <li>{{ advert.getTitle() }}</li>
+            <a href="/adverts/{{ advert.getId }}"> <li>{{ advert.getTitle() }}</li> </a>
         {% endfor %}
     </ul>
 {% endblock %}
