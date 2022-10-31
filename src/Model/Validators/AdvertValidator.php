@@ -2,7 +2,7 @@
 
 namespace App\Model\Validators;
 
-class AdvertValidator
+class AdvertValidator implements ValidatorInterface
 {
     private const NOT_EMPTY_FIELDS = ['title', 'description'];
     private const MIN_TITLE_LENGTH = 10;
