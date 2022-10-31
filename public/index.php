@@ -23,7 +23,8 @@ $app->post('/adverts', Controllers\AdvertController::class . ':create');
 
 $app->get('/adverts/{id}', Controllers\AdvertController::class . ':show');
 $app->get('/adverts/{id}/edit', Controllers\AdvertController::class . ':editAdvert');
-$app->post('/adverts/{id}', Controllers\AdvertController::class . ':update');
+//$app->patch('/adverts/{id}', Controllers\AdvertController::class . ':update');
+$app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':update');
 $app->get('/categories', Controllers\CategoryController::class . ':index');
 
 $app->run();

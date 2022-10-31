@@ -25,6 +25,7 @@ class AdvertController extends BaseController
             $adverts = $this->repo->getByCategoryAndTitle($categoryId, $title);
         } catch (Exception $e) {
             echo $e->getMessage();
+            $response->withStatus(404);
             die;
         }
 
@@ -43,6 +44,7 @@ class AdvertController extends BaseController
             $advert = $this->repo->getById($id);
         } catch (Exception $e) {
             echo $e->getMessage();
+            $response->withStatus(404);
             die;
         }
 
@@ -82,8 +84,11 @@ class AdvertController extends BaseController
         return $view->render($response, 'adverts/edit.twig');
     }
 
-    public function update(ServerRequest $request, Response $response) {
+    public function update(ServerRequest $request, Response $response, array $args) {
+        $id = (int) $args['id'];
+
         $advertData  = $request->getParsedBodyParam('advert', []);
+        $advertData['id'] = $id;
 
         $validator = new AdvertValidator();
         $errors    = $validator->validate($advertData);

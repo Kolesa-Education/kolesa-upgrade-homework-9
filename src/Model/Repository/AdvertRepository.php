@@ -45,7 +45,7 @@ class AdvertRepository extends BaseRepository
         return $result;
     }
 
-    public function create(array $advertData): Advert {
+    public function create(array $data): Advert {
         $sql = "INSERT INTO adverts (title, 
                                     description, 
                                     price, 
@@ -57,12 +57,17 @@ class AdvertRepository extends BaseRepository
                         :category_id
                         )";
 
-        $this->prepareSql($sql, $advertData);
+        $stmt = $this->connection->prepare($sql);
 
-        return new Advert($advertData);
+        $stmt->bindValue("title", $data['title']);
+        $stmt->bindValue("description", $data['description']);
+        $stmt->bindValue("price", $data['price']);
+        $stmt->bindValue("category_id", $data['category_id']);
+
+        return new Advert($data);
     }
 
-    public function update(array $advertData): Advert
+    public function update(array $data): Advert
     {
         $sql = "UPDATE adverts 
                 SET title = :title, 
@@ -71,20 +76,21 @@ class AdvertRepository extends BaseRepository
                     category_id = :category_id
                 WHERE id = :id";
 
-        $this->prepareSql($sql, $advertData);
-
-        return new Advert($advertData);
-    }
-
-    private function prepareSql(string $sql, array $data): void
-    {
         $stmt = $this->connection->prepare($sql);
 
         $stmt->bindValue("title", $data['title']);
         $stmt->bindValue("description", $data['description']);
         $stmt->bindValue("price", $data['price']);
         $stmt->bindValue("category_id", $data['category_id']);
+        $stmt->bindValue("id", $data['id']);
 
         $stmt->execute();
+
+        return new Advert($data);
+    }
+
+    private function prepareSql(string $sql, array $data): void
+    {
+
     }
 }
