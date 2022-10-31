@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Repository\AdvertRepository;
+use App\Model\Repository\BaseRepository;
 use App\Model\Repository\CategoryRepository;
 use App\Model\Validators\AdvertValidator;
 use Exception;
@@ -12,9 +13,14 @@ use Slim\Views\Twig;
 
 class AdvertController extends BaseController
 {
+    protected BaseRepository $categoryRepo;
+    protected array $categories;
+
     public function __construct()
     {
         $this->repo = new AdvertRepository();
+        $this->categoryRepo = new CategoryRepository();
+        $this->categories = $this->categoryRepo->getAll();
     }
 
     public function index(ServerRequest $request, Response $response)
@@ -32,7 +38,10 @@ class AdvertController extends BaseController
 
         $view = Twig::fromRequest($request);
 
-        return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
+        return $view->render($response, 'adverts/index.twig', [
+            'adverts' => $adverts,
+            'categories' => $this->categories,
+        ]);
     }
 
     public function show(ServerRequest $request, Response $response, array $args)
@@ -55,11 +64,8 @@ class AdvertController extends BaseController
     public function newAdvert(ServerRequest $request, Response $response) {
         $view = Twig::fromRequest($request);
 
-        $categoryRepo = new CategoryRepository();
-        $categories = $categoryRepo->getAll();
-
         return $view->render($response, 'adverts/new.twig', [
-            'categories' => $categories,
+            'categories' => $this->categories,
         ]);
     }
 
@@ -75,6 +81,7 @@ class AdvertController extends BaseController
 
             return $view->render($response, 'adverts/new.twig', [
                 'data'   => $advertData,
+                'categories' => $this->categories,
                 'errors' => $errors,
             ]);
         }
@@ -87,11 +94,8 @@ class AdvertController extends BaseController
     public function editAdvert(ServerRequest $request, Response $response) {
         $view = Twig::fromRequest($request);
 
-        $categoryRepo = new CategoryRepository();
-        $categories = $categoryRepo->getAll();
-
         return $view->render($response, 'adverts/edit.twig', [
-            'categories' => $categories,
+            'categories' => $this->categories,
         ]);
     }
 
@@ -104,15 +108,12 @@ class AdvertController extends BaseController
         $validator = new AdvertValidator();
         $errors    = $validator->validate($advertData);
 
-        $categoryRepo = new CategoryRepository();
-        $categories = $categoryRepo->getAll();
-
         if (!empty($errors)) {
             $view = Twig::fromRequest($request);
 
             return $view->render($response, 'adverts/edit.twig', [
                 'data'   => $advertData,
-                'categories' => $categories,
+                'categories' => $this->categories,
                 'errors' => $errors,
             ]);
         }

@@ -7,8 +7,9 @@
         <div>
             <select name="category_id">
                 <option value="0">Все категории</option>
-                <option value="1">Автомобили</option>
-                <option value="2">Смартфоны</option>
+                {% for category in categories %}
+                    <option value={{ category.id }}>{{ category.title }}</option>
+                {% endfor %}
             </select>
 
             <input type="text" name="title" value="{{ data.title ?? '' }}">
