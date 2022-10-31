@@ -19,15 +19,18 @@ class AdvertRepository extends BaseRepository
         $result = [];
         $title = "%$title%";
 
+        $whereClause = "deleted_at IS NULL";
+        $sql = "SELECT * FROM {$this->table} WHERE {$whereClause}";
+
         if ($categoryId != 0) {
-            $sql = "SELECT * FROM {$this->table} WHERE category_id = :category AND title LIKE :title";
+            $sql .= " AND category_id = :category AND title LIKE :title";
 
             $stmt = $this->connection->prepare($sql);
 
             $stmt->bindValue("category", $categoryId);
             $stmt->bindValue("title", $title);
         } else {
-            $sql = "SELECT * FROM {$this->table} WHERE title LIKE :title";
+            $sql .= " AND title LIKE :title";
 
             $stmt = $this->connection->prepare($sql);
 
@@ -49,13 +52,11 @@ class AdvertRepository extends BaseRepository
         $sql = "INSERT INTO adverts (title, 
                                     description, 
                                     price, 
-                                    category_id
-                                    ) 
+                                    category_id) 
                 VALUES (:title, 
                         :description, 
                         :price, 
-                        :category_id
-                        )";
+                        :category_id)";
 
         $stmt = $this->connection->prepare($sql);
 
@@ -63,6 +64,8 @@ class AdvertRepository extends BaseRepository
         $stmt->bindValue("description", $data['description']);
         $stmt->bindValue("price", $data['price']);
         $stmt->bindValue("category_id", $data['category_id']);
+
+        $stmt->execute();
 
         return new Advert($data);
     }
