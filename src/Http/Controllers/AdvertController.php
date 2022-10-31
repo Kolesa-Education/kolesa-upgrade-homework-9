@@ -18,8 +18,8 @@ class AdvertController extends BaseController
 
     public function index(ServerRequest $request, Response $response)
     {
-        $title = $_POST['title'] ?? '';
-        $categoryId = $_POST['category_id'] ?? 0;
+        $title = $_GET['title'] ?? '';
+        $categoryId = $_GET['category_id'] ?? 0;
 
         try {
             $adverts = $this->repo->getByCategoryAndTitle($categoryId, $title);
