@@ -38,6 +38,17 @@ class AdvertRepository
         return new Advert($advertData);
     }
 
+    public function edit(array $advertData): Advert {
+        $db        = $this->getDB();
+        $adId      = $advertData['id'];
+        $db[$adId] = $advertData;
+        print_r("db=" . $db);
+        print_r("adId=" . $adId);
+        $this->saveDB($db);
+
+        return new Advert($advertData);
+    }
+
     private function getDB(): array
     {
         return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
