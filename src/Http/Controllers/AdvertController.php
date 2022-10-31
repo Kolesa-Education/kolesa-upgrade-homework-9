@@ -91,11 +91,22 @@ class AdvertController extends BaseController
         return $response->withRedirect('/adverts');
     }
 
-    public function editAdvert(ServerRequest $request, Response $response) {
+    public function editAdvert(ServerRequest $request, Response $response, array $args) {
+        $id = (int) $args['id'];
+
+        try {
+            $advert = $this->repo->getById($id);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            $response->withStatus(404);
+            die;
+        }
+
         $view = Twig::fromRequest($request);
 
         return $view->render($response, 'adverts/edit.twig', [
             'categories' => $this->categories,
+            'data' => $advert,
         ]);
     }
 
