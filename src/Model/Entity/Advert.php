@@ -2,12 +2,15 @@
 
 namespace App\Model\Entity;
 
+use App\Model\Repository\CategoryRepository;
+
 class Advert extends AbstractModel
 {
     private ?int $id;
     private ?string $title;
     private ?string $description;
     private ?int    $price;
+    private ?int $categoryId;
 
     public function __construct($data = [])
     {
@@ -15,6 +18,7 @@ class Advert extends AbstractModel
         $this->title = $data['title'] ?? null;
         $this->description = $data['description'] ?? null;
         $this->price = $data['price'] ?? null;
+        $this->categoryId = $data['category_id'] ?? null;
     }
 
     public function getId(): ?int
@@ -37,6 +41,20 @@ class Advert extends AbstractModel
         return $this->price;
     }
 
+    public function getCategory(): ?string
+    {
+        $categoryRepo = new CategoryRepository();
+        $categories = $categoryRepo->getAll();
+
+        foreach ($categories as $category) {
+            if ($category->getId() == $this->categoryId) {
+                return $category->getTitle();
+            }
+        }
+
+        return null;
+    }
+
     public function toArray(): array
     {
         return [
@@ -44,6 +62,7 @@ class Advert extends AbstractModel
             'title' => $this->getTitle(),
             'description' => $this->getDescription(),
             'price' => $this->getPrice(),
+            'category' => $this->getCategory(),
         ];
     }
 }
