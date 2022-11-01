@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repository;
+namespace App\Services;
 
 use App\Model\Advert;
 
-interface InterfaceAdvertRepository
+interface InterfaceAdvertService
 {
     public function collection(): array;
 

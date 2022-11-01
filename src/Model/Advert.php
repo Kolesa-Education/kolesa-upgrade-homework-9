@@ -2,12 +2,29 @@
 
 namespace App\Model;
 
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
+
+#[Entity]
+#[Table('adverts')]
 class Advert
 {
-    private ?int    $id;
+    #[Id]
+    #[Column, GeneratedValue]
+    private ?int $id;
+
+    #[Column(type: Types::STRING)]
     private ?string $title;
+
+    #[Column(type: Types::STRING)]
     private ?string $description;
-    private ?int    $price;
+
+    #[Column(type: Types::INTEGER)]
+    private ?int $price;
 
     public function __construct($data = [])
     {

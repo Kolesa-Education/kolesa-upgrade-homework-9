@@ -3,20 +3,24 @@
 namespace App\Repository;
 
 use App\Model\Advert;
+use Doctrine\ORM\EntityManager;
 
 class AdvertRepository implements InterfaceAdvertRepository
 {
-    private const DB_PATH = '../storage/adverts.json';
+    private EntityManager $em;
+
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
 
     public function collection(): array
     {
-        $result = [];
-
-        foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
-        }
-
-        return $result;
+        return $this->em->createQueryBuilder()
+            ->select('a')
+            ->from(Advert::class, 'a')
+            ->getQuery()
+            ->getArrayResult();
     }
 
     public function find(int $id): ?Advert
@@ -33,23 +37,9 @@ class AdvertRepository implements InterfaceAdvertRepository
      */
     public function create(array $advertData): Advert
     {
-        $db = $this->getDB();
-        $increment = array_key_last($db) + 1;
-        $advertData['id'] = $increment;
-        $db[$increment] = $advertData;
-
-        $this->saveDB($db);
-
-        return new Advert($advertData);
-    }
-
-    private function getDB(): array
-    {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
-    }
-
-    private function saveDB(array $data): void
-    {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        $advert = new Advert($advertData);
+        $this->em->persist($advert);
+        $this->em->flush();
+        return $advert;
     }
 }
