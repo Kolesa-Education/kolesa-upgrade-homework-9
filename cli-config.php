@@ -24,7 +24,7 @@ $params = [
 
 $entityManager = EntityManager::create(
     $params,
-    Setup::createAttributeMetadataConfiguration([__DIR__ . '/src/Model/Entity'])
+    Setup::createAttributeMetadataConfiguration([__DIR__ . '/src/Model'])
 );
 
 return DependencyFactory::fromEntityManager($config, new ExistingEntityManager($entityManager));
