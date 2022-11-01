@@ -4,5 +4,35 @@
         "description": "Батарейка 100%",
         "price": "80000",
         "id": 1
+    },
+    "2": {
+        "title": "iPhone 13 Pro",
+        "description": "Цвет серый, объем памяти 256Гб",
+        "price": "679990",
+        "id": 2
+    },
+    "3": {
+        "title": "iPhone 13 Pro Max",
+        "description": "Цвет graphite, объем памяти 512Gb",
+        "price": "749990",
+        "id": 3
+    },
+    "4": {
+        "id": 4,
+        "title": "iPhone 14 Pro",
+        "description": "Цвет Space Black, объем памяти 1Tb",
+        "price": "1049990"
+    },
+    "5": {
+        "title": "Apple iPhone 14",
+        "description": "Цвет синий, объем памяти 256Гб",
+        "price": "629990",
+        "id": 5
+    },
+    "6": {
+        "title": "iPhone 14 256Gb Blue",
+        "description": "Цвет синий, объем памяти 256Гб, 2022",
+        "price": "619990",
+        "id": 6
     }
 }
