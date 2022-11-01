@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model\Validators;
+namespace App\Validators;
 
 class AdvertValidator implements ValidatorInterface
 {

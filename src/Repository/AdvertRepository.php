@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Model\Repository;
+namespace App\Repository;
 
-use App\Model\Entity\Advert;
+use App\Model\Advert;
 
-class AdvertRepository
+class AdvertRepository implements InterfaceAdvertRepository
 {
     private const DB_PATH = '../storage/adverts.json';
 
-    public function getAll(): array
+    public function collection(): array
     {
         $result = [];
 
