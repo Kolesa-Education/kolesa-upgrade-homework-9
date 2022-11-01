@@ -19,17 +19,19 @@ class AdvertRepository
         return $result;
     }
 
-    public function getById(int $id){
+    public function getById(int $id)
+    {
         $arr = $this->getDB();
         foreach ($arr as $advertData) {
-            if($advertData["id"] === $id){
+            if ($advertData["id"] === $id) {
                 return new Advert($advertData);
             }
         }
         return null;
     }
 
-    public function create(array $advertData): Advert {
+    public function create(array $advertData): Advert
+    {
         $db               = $this->getDB();
         $increment        = array_key_last($db) + 1;
         $advertData['id'] = $increment;
@@ -40,7 +42,8 @@ class AdvertRepository
         return new Advert($advertData);
     }
 
-    public function update(int $id, array $advertData) {
+    public function update(int $id, array $advertData)
+    {
         $db = $this->getDB();
         $db[$id]   = $advertData;
 
@@ -54,8 +57,8 @@ class AdvertRepository
         return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
     }
 
-    private function saveDB(array $data):void
+    private function saveDB(array $data): void
     {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
 }

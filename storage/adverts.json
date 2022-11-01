@@ -20,5 +20,15 @@
         "description": "123",
         "price": "123",
         "id": 3
+    },
+    "4": {
+        "title": "New123131312313",
+        "description": "213",
+        "price": "123",
+        "category": {
+            "id": "2",
+            "name": "BBbb"
+        },
+        "id": 4
     }
 }

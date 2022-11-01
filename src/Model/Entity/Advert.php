@@ -16,7 +16,7 @@ class Advert
         $this->title = $data['title'] ?? null;
         $this->description = $data['description'] ?? null;
         $this->price = $data['price'] ?? null;
-        $this->category = new Category($data['category']??["name"=>"Unknown"]); 
+        $this->category = new Category($data['category'] ?? ["name" => "Unknown"]);
     }
 
     public function getId(): ?int
@@ -39,7 +39,8 @@ class Advert
         return $this->price;
     }
 
-    public function getCategory(): ?string{
+    public function getCategory(): ?string
+    {
         return $this->category->getName();
     }
 

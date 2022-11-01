@@ -19,17 +19,19 @@ class CategoryRepository
         return $result;
     }
 
-    public function getById(int $id){
+    public function getById(int $id)
+    {
         $arr = $this->getDB();
         foreach ($arr as $categoryData) {
-            if($categoryData["id"] === $id){
+            if ($categoryData["id"] === $id) {
                 return new Category($categoryData);
             }
         }
         return null;
     }
 
-    public function create(array $categoryData): Category {
+    public function create(array $categoryData): Category
+    {
         $db               = $this->getDB();
         $increment        = array_key_last($db) + 1;
         $categoryData['id'] = $increment;
@@ -45,8 +47,8 @@ class CategoryRepository
         return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
     }
 
-    private function saveDB(array $data):void
+    private function saveDB(array $data): void
     {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
 }

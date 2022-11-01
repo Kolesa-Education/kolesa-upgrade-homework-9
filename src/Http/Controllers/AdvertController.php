@@ -21,13 +21,19 @@ class AdvertController
         return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
     }
 
-    public function newAdvert(ServerRequest $request, Response $response) {
+    public function newAdvert(ServerRequest $request, Response $response)
+    {
         $view = Twig::fromRequest($request);
+        $categoryRepo = new CategoryRepository();
+        $categories = $categoryRepo->getAll();
 
-        return $view->render($response, 'adverts/new.twig');
+        return $view->render($response, 'adverts/new.twig', [
+            'categories' => $categories
+        ]);
     }
 
-    public function updateAdvert(ServerRequest $request, Response $response, array $args) {
+    public function updateAdvert(ServerRequest $request, Response $response, array $args)
+    {
         $repo        = new AdvertRepository();
         $id = intval($args['id']);
         $advertData =  $repo->getById($id);
@@ -48,6 +54,12 @@ class AdvertController
         $repo        = new AdvertRepository();
         $advertData  = $request->getParsedBodyParam('advert', []);
 
+        $categoryData  = $request->getParsedBodyParam('category');
+        $categoryDataArr = explode('.', $categoryData);
+        $categoryArr = ["id" => $categoryDataArr[0], "name" => $categoryDataArr[1]];
+
+        $advertData['category'] = $categoryArr;
+
         $validator = new AdvertValidator();
         $errors    = $validator->validate($advertData);
 
@@ -65,13 +77,16 @@ class AdvertController
         return $response->withRedirect('/adverts');
     }
 
-    public function update(ServerRequest $request, Response $response, array $args){
-        
+    public function update(ServerRequest $request, Response $response, array $args)
+    {
+
         $repo        = new AdvertRepository();
         $advertData  = $request->getParsedBodyParam('advert', []);
+
         $categoryData  = $request->getParsedBodyParam('category');
         $categoryDataArr = explode('.', $categoryData);
-        $categoryArr = ["id"=>$categoryDataArr[0], "name"=>$categoryDataArr[1]];
+        $categoryArr = ["id" => $categoryDataArr[0], "name" => $categoryDataArr[1]];
+
         $id = intval($args['id']);
         $advertData['id'] = $id;
         $advertData['category'] = $categoryArr;
@@ -92,20 +107,20 @@ class AdvertController
         return $response->withRedirect("/adverts/$id");
     }
 
-    public function showAdvert(ServerRequest $request, Response $response, array $args){
+    public function showAdvert(ServerRequest $request, Response $response, array $args)
+    {
         $id = $args['id'];
 
         $advertsRepo = new AdvertRepository();
-        $advert     = $advertsRepo->getById(intval($id))??null;
+        $advert     = $advertsRepo->getById(intval($id)) ?? null;
 
-        if(is_null($advert)){
-            return $response -> write("Wrong id");
+        if (is_null($advert)) {
+            return $response->write("Wrong id");
         }
 
         $view = Twig::fromRequest($request);
 
 
-        return $view->render($response, 'adverts/showOne.twig', ['advert'=>$advert]);
-
+        return $view->render($response, 'adverts/showOne.twig', ['advert' => $advert]);
     }
 }
