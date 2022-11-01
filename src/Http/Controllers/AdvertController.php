@@ -79,7 +79,6 @@ class AdvertController extends Dbh
         $advertData       = $request->getParsedBodyParam('advert', []);
         $advertData['id'] = $advertId;
 
-
         $validator = new AdvertValidator();
         $errors    = $validator->validate($advertData);
 
