@@ -30,6 +30,14 @@ class AdvertRepository
         return new Advert($advertData);
     }
 
+    public function getById(int $id): Advert
+    {
+        $adArray = $this->getDB();
+        $advertData = $adArray[$id];
+        
+        return new Advert($advertData);
+    }
+
     private function getDB(): array
     {
         return json_decode(file_get_contents(self::DB_PATH), true) ?? [];

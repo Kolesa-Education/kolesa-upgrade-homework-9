@@ -8,13 +8,10 @@ use Slim\Http\ServerRequest;
 use Slim\Http\Response;
 use Slim\Views\Twig;
 
-class AdvertController
-{
-    public function index(ServerRequest $request, Response $response)
-    {
-        $advertsRepo = new AdvertRepository();
-        $adverts     = $advertsRepo->getAll();
-
+class AdvertController {
+    public function index(ServerRequest $request, Response $response) {
+        $repo = new AdvertRepository();
+        $adverts = $repo->getAll();
         $view = Twig::fromRequest($request);
 
         return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
@@ -26,8 +23,7 @@ class AdvertController
         return $view->render($response, 'adverts/new.twig');
     }
 
-    public function create(ServerRequest $request, Response $response)
-    {
+    public function create(ServerRequest $request, Response $response) {
         $repo        = new AdvertRepository();
         $advertData  = $request->getParsedBodyParam('advert', []);
 
@@ -46,5 +42,13 @@ class AdvertController
         $repo->create($advertData);
 
         return $response->withRedirect('/adverts');
+    }
+
+    public function advertPage(ServerRequest $request, Response $response, array $args) {
+        $view = Twig::fromRequest($request);
+        $adId = $args['id'];
+        $advertsRepo = new AdvertRepository();
+        $advert = $advertsRepo->getById($adId);
+        return $view->render($response, 'adverts/advert.twig', ['advert' => $advert]);
     }
 }
