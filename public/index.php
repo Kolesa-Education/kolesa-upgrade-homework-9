@@ -17,4 +17,8 @@ $app->get('/adverts', Controllers\AdvertController::class . ':index');
 $app->get('/adverts/new', Controllers\AdvertController::class . ':newAdvert');
 $app->post('/adverts', Controllers\AdvertController::class . ':create');
 
+$app->get('/adverts/{id}', Controllers\AdvertController::class . ':read');
+$app->get('/adverts/{id}/update', Controllers\AdvertController::class . ':updateAdvert');
+$app->post('/adverts/{id}/update', Controllers\AdvertController::class . ':update');
+
 $app->run();
