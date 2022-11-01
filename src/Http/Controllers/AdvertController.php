@@ -24,9 +24,7 @@ class AdvertController
         $advertsRepo = new AdvertRepository();
         $adverts = $advertsRepo->getAll();
 
-        $view = Twig::fromRequest($request);
-
-        return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
+        return Twig::fromRequest($request)->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
     }
 
     /**
@@ -36,9 +34,22 @@ class AdvertController
      */
     public function newAdvert(ServerRequest $request, Response $response): ResponseInterface
     {
-        $view = Twig::fromRequest($request);
+        return Twig::fromRequest($request)->render($response, 'adverts/new.twig');
+    }
 
-        return $view->render($response, 'adverts/new.twig');
+    /**
+     * @throws RuntimeError
+     * @throws SyntaxError
+     * @throws LoaderError
+     */
+    public function getItem(ServerRequest $request, Response $response): ResponseInterface
+    {
+        $advertsRepo = new AdvertRepository();
+        $advert = $advertsRepo->find($request->getAttribute('id'));
+        if ($advert === null) {
+            die(500);
+        }
+        return Twig::fromRequest($request)->render($response, 'adverts/item.twig', ['advert' => $advert]);
     }
 
     /**
@@ -56,16 +67,12 @@ class AdvertController
         $errors = $validator->validate($advertData);
 
         if (!empty($errors)) {
-            $view = Twig::fromRequest($request);
-
-            return $view->render($response, 'adverts/new.twig', [
+            return Twig::fromRequest($request)->render($response, 'adverts/new.twig', [
                 'data' => $advertData,
                 'errors' => $errors,
             ]);
         }
-
         $repo->create($advertData);
-
         return $response->withRedirect('/adverts');
     }
 }
