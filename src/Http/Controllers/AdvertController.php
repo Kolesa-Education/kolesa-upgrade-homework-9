@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Repository\AdvertRepository;
+use App\Model\Repository\CategoryRepository;
 use App\Model\Validators\AdvertValidator;
 use Slim\Http\ServerRequest;
 use Slim\Http\Response;
@@ -26,14 +27,19 @@ class AdvertController
         return $view->render($response, 'adverts/new.twig');
     }
 
-    public function updateAdvert(ServerRequest $request, Response $response, array $id) {
+    public function updateAdvert(ServerRequest $request, Response $response, array $args) {
         $repo        = new AdvertRepository();
-        $id = intval(join('', $id));
+        $id = intval($args['id']);
         $advertData =  $repo->getById($id);
+
+        $categoryRepo = new CategoryRepository();
+        $categories = $categoryRepo->getAll();
+
         $view = Twig::fromRequest($request);
 
         return $view->render($response, 'adverts/update.twig', [
             'data' => $advertData->toArray(),
+            'categories' => $categories
         ]);
     }
 
@@ -59,11 +65,16 @@ class AdvertController
         return $response->withRedirect('/adverts');
     }
 
-    public function update(ServerRequest $request, Response $response, array $id){
+    public function update(ServerRequest $request, Response $response, array $args){
+        
         $repo        = new AdvertRepository();
         $advertData  = $request->getParsedBodyParam('advert', []);
-        $id = intval(join('', $id));
+        $categoryData  = $request->getParsedBodyParam('category');
+        $categoryDataArr = explode('.', $categoryData);
+        $categoryArr = ["id"=>$categoryDataArr[0], "name"=>$categoryDataArr[1]];
+        $id = intval($args['id']);
         $advertData['id'] = $id;
+        $advertData['category'] = $categoryArr;
 
         $validator = new AdvertValidator();
         $errors    = $validator->validate($advertData);
@@ -81,13 +92,11 @@ class AdvertController
         return $response->withRedirect("/adverts/$id");
     }
 
-    public function showAdvert(ServerRequest $request, Response $response, array $id){
-        if(count($id)<1 || count($id)>1){
-            return $response->write("Something wrong with parameters...");
-        }
+    public function showAdvert(ServerRequest $request, Response $response, array $args){
+        $id = $args['id'];
 
         $advertsRepo = new AdvertRepository();
-        $advert     = $advertsRepo->getById(intval(join('', $id)))??null;
+        $advert     = $advertsRepo->getById(intval($id))??null;
 
         if(is_null($advert)){
             return $response -> write("Wrong id");

@@ -3,12 +3,22 @@
         "title": "Продам iPhone 8dsgd",
         "description": "Батарейка 100%",
         "price": "80000",
-        "id": 1
+        "id": 1,
+        "category": {
+            "id": "2",
+            "name": "BBbb"
+        }
     },
     "2": {
         "title": "Aaaaaaaaaaaaaaaaaaaa",
         "description": "123",
         "price": "1",
         "id": 2
+    },
+    "3": {
+        "title": "New12312312312",
+        "description": "123",
+        "price": "123",
+        "id": 3
     }
 }

@@ -16,8 +16,8 @@ $app->get('/', Controllers\IndexController::class . ':home');
 $app->get('/adverts', Controllers\AdvertController::class . ':index');
 $app->post('/adverts', Controllers\AdvertController::class . ':create');
 $app->get('/adverts/new', Controllers\AdvertController::class . ':newAdvert');
-$app->get('/adverts/{i}', Controllers\AdvertController::class . ':showAdvert');
-$app->post('/adverts/{i}/edit', Controllers\AdvertController::class . ':update');
-$app->get('/adverts/{i}/edit', Controllers\AdvertController::class . ':updateAdvert');
+$app->get('/adverts/{id}', Controllers\AdvertController::class . ':showAdvert');
+$app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':update');
+$app->get('/adverts/{id}/edit', Controllers\AdvertController::class . ':updateAdvert');
 
 $app->run();
