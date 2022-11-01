@@ -76,7 +76,8 @@ class AdvertRepository extends BaseRepository
                 SET title = :title, 
                     description = :description, 
                     price = :price, 
-                    category_id = :category_id
+                    category_id = :category_id,
+                    updated_at = SYSDATE()
                 WHERE id = :id";
 
         $stmt = $this->connection->prepare($sql);
