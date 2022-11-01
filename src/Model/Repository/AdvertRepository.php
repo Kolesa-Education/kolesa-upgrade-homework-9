@@ -19,14 +19,24 @@ class AdvertRepository
         return $result;
     }
 
+    public function find(int $id): ?Advert
+    {
+        $data = $this->getDB()[$id] ?? null;
+        if ($data) {
+            return new Advert($data);
+        }
+        return null;
+    }
+
     /**
      * @throws \JsonException
      */
-    public function create(array $advertData): Advert {
-        $db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
+    public function create(array $advertData): Advert
+    {
+        $db = $this->getDB();
+        $increment = array_key_last($db) + 1;
         $advertData['id'] = $increment;
-        $db[$increment]   = $advertData;
+        $db[$increment] = $advertData;
 
         $this->saveDB($db);
 
@@ -38,7 +48,7 @@ class AdvertRepository
         return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
     }
 
-    private function saveDB(array $data):void
+    private function saveDB(array $data): void
     {
         file_put_contents(self::DB_PATH, json_encode($data, JSON_THROW_ON_ERROR | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
     }
