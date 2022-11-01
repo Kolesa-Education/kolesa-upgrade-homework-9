@@ -30,7 +30,7 @@ class AdvertController extends Dbh
 
     public function create(ServerRequest $request, Response $response)
     {
-        //$repo        = new AdvertRepository();
+        $repo        = new AdvertRepository();
         $advertData  = $request->getParsedBodyParam('advert', []);
 
         $validator   = new AdvertValidator();
@@ -45,7 +45,6 @@ class AdvertController extends Dbh
             ]);
         }
 
-        //$repo->create($advertData);
         $repo->create($advertData);
 
         return $response->withRedirect('/adverts');
@@ -63,8 +62,9 @@ class AdvertController extends Dbh
 
     public function updateAdvert(ServerRequest $request, Response $response, array $args) 
     {
-        $advertId  = $args['id'];
-        $advert      = $advertsRepo->update($advertId);
+        $advertsRepo        = new AdvertRepository();
+        $advertId    = $args['id'];
+        $advert      = $advertsRepo->read($advertId);
         
         $view = Twig::fromRequest($request);
 
@@ -73,6 +73,7 @@ class AdvertController extends Dbh
 
     public function update(ServerRequest $request, Response $response, array $args)
     {
+        $advertsRepo      = new AdvertRepository();
         $advertId         = $args['id'];
 
         $advertData       = $request->getParsedBodyParam('advert', []);
@@ -91,21 +92,9 @@ class AdvertController extends Dbh
             ]);
         }
 
-        $repo->update($advertData);
+        $advertsRepo->update($advertData);
 
         return $response->withRedirect('/adverts');
-    }
-
-    private function advertMatch()
-    {
-        $result;
-        if ($this->read($this->id))
-        {
-            $result = false;
-        } else {
-            $result = true;
-        }
-        return $result;
     }
 
 }

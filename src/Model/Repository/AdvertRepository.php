@@ -13,13 +13,57 @@ class AdvertRepository extends Dbh
     {
         $result = [];
 
-        foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
+        $stmt = $this->connect()->query('SELECT title FROM adverts;');
+        $query = $stmt->fetchAll(PDO::FETCH_DEFAULT);
+
+        foreach ($query as $advertData) {
+            $result[] = new Advert(json_decode(json_encode($advertData), true));
         }
 
         return $result;
     }
-/*
+
+    public function read(int $id)
+    {
+        $stmt = $this->connect()->prepare('SELECT * FROM adverts WHERE id = :id;');
+
+        $stmt->bindValue("id", $id);
+        $stmt->execute();
+
+        $query = $stmt->fetch(PDO::FETCH_DEFAULT);
+        
+        return new Advert(json_decode(json_encode($query), true));
+    }
+
+    public function create(array $advertData)
+    {
+        $stmt = $this->connect()->prepare('INSERT INTO adverts (title, description, price) VALUES (:title, :description, :price);');
+
+        $stmt->bindValue("title", $advertData['title'], PDO::PARAM_STR);
+        $stmt->bindValue("description", $advertData['description'], PDO::PARAM_STR);
+        $stmt->bindValue("price", $advertData['price'], PDO::PARAM_INT);
+        
+        $stmt->execute();
+
+        return new Advert($advertData);
+
+    }
+
+    public function update(array $advertData)
+    {
+        $stmt = $this->connect()->prepare('UPDATE adverts SET title = :title, description = :description, price = :price WHERE id = :id;');
+
+        $stmt->bindValue("title", $advertData['title'], PDO::PARAM_STR);
+        $stmt->bindValue("description", $advertData['description'], PDO::PARAM_STR);
+        $stmt->bindValue("price", $advertData['price'], PDO::PARAM_INT);
+        $stmt->bindValue("id", $advertData['id'], PDO::PARAM_INT);
+        
+        $stmt->execute();
+
+        return new Advert($advertData);
+    }
+
+    /*
     public function create(array $advertData): Advert 
     {
         $db               = $this->getDB();
@@ -61,44 +105,4 @@ class AdvertRepository extends Dbh
         file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
     }
 */
-    protected function read(int $id)
-    {
-        $stmt = $this->connect()->prepare('SELECT id FROM adverts WHERE id = ?;');
-
-        if ($stmt->execute(array($id)))
-        {
-            $stmt = null;
-            header("location: ../public/index/php?error=stmtfailed");
-            exit();
-        }
-
-        $resultCheck;
-        if ($stmt->rowCount() > 0)
-        {
-            $resultCheck = false;
-        } else {
-            $resultCheck = true;
-        }
-        
-        return $resultCheck;
-    }
-
-    protected function create(array $advertData)
-    {
-        $stmt = $this->connect()->prepare('INSERT INTO adverts (title, [description], price) VALUES (?, ?, ?);');
-
-        $stmt = execute();
-
-        return new Advert($advertData);
-
-    }
-
-    protected function update(array $advertData)
-    {
-        $stmt = $this->connect()->prepare('UPDATE adverts SET title = ?, [description] = ?, price = ? WHERE id = :id;');
-
-        $stmt = execute();
-
-        return new Advert($advertData);
-    }
 }
