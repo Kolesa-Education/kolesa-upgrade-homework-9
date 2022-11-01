@@ -47,4 +47,74 @@ class AdvertController
 
         return $response->withRedirect('/adverts');
     }
+
+public function getAdvert(ServerRequest $request, Response $response,$idArray)
+{
+        $advertId = $idArray['id'];
+        $advertsRepo = new AdvertRepository();
+        $advert = $advertsRepo->getById($advertId);
+        $view = Twig::fromRequest($request);
+        return $view->render($response, 'adverts/advert.twig', ['advert' => $advert]);
+}
+
+public function editAdvert(ServerRequest $request, Response $response,$id)
+{
+    $repo        = new AdvertRepository();
+    $advertData  = $request->getParsedBodyParam('advert',[]);
+
+    $validator = new AdvertValidator();
+    $errors    = $validator->validate($advertData);
+
+    if (!empty($errors)) {
+        $view = Twig::fromRequest($request);
+
+        return $view->render($response, 'adverts/edit.twig', [
+            'data'   => $advertData,
+            'id'=>$id['id'],
+            'errors' => $errors,
+        ]);
+    }
+
+
+    $repo->editAdvert($advertData,$id['id']);
+
+    return $response->withRedirect('/adverts/'.$id['id']);
+}
+public function edAdvert(ServerRequest $request, Response $response, $id) {
+
+    $advertsRepo = new AdvertRepository();
+    $advertData = $advertsRepo->getById($id['id']);
+    $view = Twig::fromRequest($request);
+    return $view->render($response, 'adverts/edit.twig',['data' => $advertData, 'id' => $id['id']]);
+}
+public function deleteAdvert(ServerRequest $request, Response $response,$id)
+{
+    $repo        = new AdvertRepository();
+    $advertData  = $request->getParsedBodyParam('advert',[]);
+
+    $validator = new AdvertValidator();
+    $errors    = $validator->validate($advertData);
+
+    if (!empty($errors)) {
+        $view = Twig::fromRequest($request);
+
+        return $view->render($response, 'adverts/delete.twig', [
+            'data'   => $advertData,
+            'id'=>$id['id'],
+            'errors' => $errors,
+        ]);
+    }
+
+
+    $repo->deleteAdvert($advertData,$id['id']);
+
+    return $response->withRedirect('/adverts');
+}
+public function delAdvert(ServerRequest $request, Response $response, $id) {
+
+    $advertsRepo = new AdvertRepository();
+    $advertData = $advertsRepo->getById($id['id']);
+    $view = Twig::fromRequest($request);
+    return $view->render($response, 'adverts/delete.twig',['data' => $advertData, 'id' => $id['id']]);
+}
 }

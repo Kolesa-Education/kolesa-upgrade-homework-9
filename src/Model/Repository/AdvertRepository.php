@@ -39,4 +39,33 @@ class AdvertRepository
     {
         file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
     }
+
+public function getById(int $id): Advert {
+        $arr = $this->getDB();
+        for($i = 1; $i<=count($arr); $i++){
+            if ($arr[$i] == null){
+                continue;
+            }
+            if($arr[$i]['id'] == $id){
+                $advertData = $arr[$i];
+                return new Advert($advertData);
+            }
+        }
+    }
+    public function editAdvert(array $advertData,$id): Advert {
+        $db = $this->getDB();
+        $advertData['id'] = $id;
+        $db[$id]   = $advertData;
+        $this->saveDB($db);
+        return new Advert($advertData);
+
+    }
+    public function deleteAdvert(array $advertData,$id): Advert {
+        $db = $this->getDB();
+        unset($advertData);
+        $db[$id]   = $advertData;
+        $this->saveDB($db);
+        return new Advert($advertData);
+
+    }
 }

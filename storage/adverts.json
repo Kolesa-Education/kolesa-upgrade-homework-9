@@ -1,8 +1,27 @@
 {
     "1": {
-        "title": "Продам xiaomi",
+        "title": "Телефон xiaomi",
         "description": "Четыре камеры",
-        "price": "150000",
-        "id": 1
+        "price": "130000",
+        "id": "1"
+    },
+    "2": {
+        "title": "Стул",
+        "description": "4 ножки",
+        "price": "15000",
+        "id": 2
+    },
+    "3": null,
+    "4": {
+        "title": "Монитор",
+        "description": "27 дюймов",
+        "price": "50000",
+        "id": 4
+    },
+    "5": {
+        "title": "Кружка",
+        "description": "Белая",
+        "price": "2300",
+        "id": "5"
     }
 }
