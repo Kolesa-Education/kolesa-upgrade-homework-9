@@ -1,0 +1,11 @@
+
+
+{% block singleAdvert %}
+    <h2>{{advert.getTitle()}}</h2>
+    <ul>
+        <li>Описание: {{advert.getDescription()}}</li>
+        <li>Цена: {{advert.getPrice()}}</li>
+        <li>Категория: {{advert.getCategory()}}</li>
+    </ul>
+    
+{% endblock %}
