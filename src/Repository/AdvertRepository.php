@@ -7,11 +7,8 @@ use Doctrine\ORM\EntityManager;
 
 class AdvertRepository implements InterfaceAdvertRepository
 {
-    private EntityManager $em;
-
-    public function __construct(EntityManager $em)
+    public function __construct(private EntityManager $em)
     {
-        $this->em = $em;
     }
 
     public function collection(): array
@@ -21,15 +18,25 @@ class AdvertRepository implements InterfaceAdvertRepository
             ->from(Advert::class, 'a')
             ->getQuery()
             ->getArrayResult();
+
+
+
+//        return $this->em->createQueryBuilder()
+//            ->select('a')
+//            ->from(Advert::class, 'a')
+//            ->getQuery()
+//            ->getArrayResult();
     }
 
-    public function find(int $id): ?Advert
+    public function find(int $id): array
     {
-        $data = $this->getDB()[$id] ?? null;
-        if ($data) {
-            return new Advert($data);
-        }
-        return null;
+        return $this->em->createQueryBuilder()
+            ->select('a')
+            ->from(Advert::class, 'a')
+            ->where('a.id = :id')
+            ->setParameter('id',$id)
+            ->getQuery()
+            ->getArrayResult();
     }
 
     /**

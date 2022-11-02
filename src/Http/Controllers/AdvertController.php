@@ -15,12 +15,8 @@ use Twig\Error\SyntaxError;
 
 class AdvertController
 {
-
-    private AdvertService $service;
-
-    public function __construct(AdvertService $service)
+    public function __construct(private AdvertRepository $repo)
     {
-        $this->service = $service;
     }
 
     /**
@@ -30,7 +26,7 @@ class AdvertController
      */
     public function index(ServerRequest $request, Response $response): ResponseInterface
     {
-        $adverts = $this->service->collection();
+        $adverts = $this->repo->collection();
 
         return Twig::fromRequest($request)->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
     }
@@ -52,8 +48,7 @@ class AdvertController
      */
     public function getItem(ServerRequest $request, Response $response): ResponseInterface
     {
-        $advertsRepo = new AdvertRepository();
-        $advert = $advertsRepo->find($request->getAttribute('id'));
+        $advert = $this->repo->find($request->getAttribute('id'));
         if ($advert === null) {
             die(404);
         }
@@ -79,7 +74,7 @@ class AdvertController
                 'errors' => $errors,
             ]);
         }
-        $this->service->create($advertData);
+        $this->repo->create($advertData);
         return $response->withRedirect('/adverts');
     }
 
