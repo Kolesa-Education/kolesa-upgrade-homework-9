@@ -5,7 +5,11 @@
 
     <ul>
         {% for advert in adverts %}
-            <li>{{ advert.getTitle() }}</li>
+            <li>
+            <a href = "/adverts/{{advert.getId}}"> {{ advert.getTitle() }} </a>
+            <a href = "/adverts/{{advert.getId}}/edit"> <a>Edit</a> </a>
+            <form method = "post" action = "/adverts/{{adverts.getId}}/delete"> <a>Delete</a> </form>
+            </li>
         {% endfor %}
     </ul>
 {% endblock %}
