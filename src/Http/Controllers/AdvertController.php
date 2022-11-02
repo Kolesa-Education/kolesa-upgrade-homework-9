@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Entity\Advert;
 use App\Model\Repository\AdvertRepository;
 use App\Model\Repository\CategoryRepository;
 use App\Model\Validators\AdvertValidator;
@@ -32,15 +33,26 @@ class AdvertController
     public function search(ServerRequest $request, Response $response, array $args)
     {
         $result = [];
+        $results1 = [];
+        $results2 = [];
         $advertsRepo = new AdvertRepository();
         $params = $request->getParams();
-        if(!is_null($params['category'])){
-            $result = $advertsRepo->getByCategoryId(intval($params['category']));
+        if(!is_null($params['category']??null)){
+            $results1 = $advertsRepo->getByCategoryId(intval($params['category']))??[];
         }
 
-        if(!is_null($params['title'])){
-            $result = $advertsRepo->getByTitle($params['title']);
+        if(!is_null($params['title']??null)){
+            $results2 = $advertsRepo->getByTitle($params['title'])??[];
         }
+        $result = array_uintersect(
+            $results1, $results2,
+            function(Advert $result1, Advert $result2) {
+                if($result1->getTitle() === $result2->getTitle()){
+                    return 0;
+                }
+            }
+        );
+
 
         $view = Twig::fromRequest($request);
 

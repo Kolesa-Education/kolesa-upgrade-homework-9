@@ -73,7 +73,7 @@ class AdvertRepository extends AbstractRepository
     }
 
     public function getByTitle(string $text){
-        $advertOutput = $this->getConnection()->query("SELECT * FROM adverts WHERE CONTAINS(title, $text);")->fetchAll(PDO::FETCH_ASSOC);
+        $advertOutput = $this->getConnection()->query("SELECT * FROM adverts WHERE title LIKE '%$text%'")->fetchAll(PDO::FETCH_ASSOC);
         
         if(count($advertOutput) === 0){
             return null;
