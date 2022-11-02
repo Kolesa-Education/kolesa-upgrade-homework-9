@@ -3,11 +3,15 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Advert;
+use PDO;
 
+$connection = new PDO("mysql:host=localhost;dbname=adverts_db","root","zhanarys");
 class AdvertRepository
 {
     private const DB_PATH = '../storage/adverts.json';
 
+    /*
+     * OLD METHOD
     public function getAll()
     {
         $result = [];
@@ -18,7 +22,32 @@ class AdvertRepository
 
         return $result;
     }
+    */
 
+    private function connectDB(): PDO
+    {
+        $connection = new PDO("mysql:host=localhost;dbname=adverts_db","root","zhanarys");
+        return $connection;
+    }
+
+
+    //METHOD FOR MYSQL
+    public function getAll(){
+        $pdo = $this->connectDB();
+        $query = "SELECT * FROM adverts";
+        $data = $pdo->query($query)->fetchAll();
+
+        $result = [];
+
+        foreach ($data as $advertData){
+            $result[] = new Advert($advertData);
+        }
+
+        return $result;
+    }
+
+    /*
+     * OLD METHOD
     public function getById(int $id): ?Advert{
         $adverts = $this->getDB();
         for ($i=0; $i<=count($adverts); $i++){
@@ -28,7 +57,37 @@ class AdvertRepository
         }
         return null;
     }
+    */
 
+    //METHOD FOR MYSQL
+    public function getById(int $id){
+        $pdo = $this->connectDB();
+        $query = "SELECT id, title, description, price FROM adverts WHERE id = ?";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute(array($id));
+
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return new Advert($data);
+    }
+
+    //METHOD FOR MYSQL
+    public function getViewId($id){
+
+        $pdo = $this->connectDB();
+        $query = "SELECT id, title, description, price FROM adverts WHERE id = ?";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute(array($id));
+
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result[] = new Advert($data);
+
+        return $result;
+    }
+
+
+    /*
+     * OLD METHOD
     public function getViewId($id)
     {
         $result = [];
@@ -42,6 +101,7 @@ class AdvertRepository
 
         return $result;
     }
+    */
 
     public function edit(array $advertData): Advert {
         $db = $this->getDB();
