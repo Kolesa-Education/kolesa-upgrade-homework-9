@@ -14,7 +14,10 @@ $app->add(TwigMiddleware::create($app, $twig));
 
 $app->get('/', Controllers\IndexController::class . ':home');
 $app->get('/adverts', Controllers\AdvertController::class . ':index');
+$app->get('/adverts/{id}', Controllers\AdvertController::class . ':mainAdvertsPage');
 $app->get('/adverts/new', Controllers\AdvertController::class . ':newAdvert');
 $app->post('/adverts', Controllers\AdvertController::class . ':create');
+$app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':edit');
+$app->post('/adverts/{id}/delete', Controllers\AdvertController::class . ':delete');
 
 $app->run();
