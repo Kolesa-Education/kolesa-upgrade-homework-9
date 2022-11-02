@@ -26,6 +26,16 @@ class AdvertController
         return $view->render($response, 'adverts/new.twig');
     }
 
+    public function getAdvert(ServerRequest $request,Response $response, $args){
+        $advertID = $args['id'];
+        $repo = new AdvertRepository();
+        $advert = $repo->getById($advertID);
+
+        $view = Twig::fromRequest($request);
+
+        return $view->render($response,'adverts/singleAdvert.twig',['advert'=>$advert]);
+    }
+
     public function create(ServerRequest $request, Response $response)
     {
         $repo        = new AdvertRepository();

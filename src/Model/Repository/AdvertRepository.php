@@ -19,6 +19,16 @@ class AdvertRepository
         return $result;
     }
 
+    public function getById(int $id): ?Advert{
+        $adverts = $this->getDB();
+        for ($i=0; $i<count($adverts); $i++){
+            if ($adverts[$i]['id'] == $id){
+                return new Advert($adverts[$i]);
+            }
+        }
+        return null;
+    }
+
     public function create(array $advertData): Advert {
         $db               = $this->getDB();
         $increment        = array_key_last($db) + 1;
