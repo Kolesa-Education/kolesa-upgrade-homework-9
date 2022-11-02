@@ -11,6 +11,6 @@ class IndexController
     {
         $view = Twig::fromRequest($request);
 
-        return $view->render($response, 'home.twig', ['name' => 'guest']);
+        return $view->render($response, 'home.twig', ['name' => 'Bomi']);
     }
 }

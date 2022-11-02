@@ -13,14 +13,16 @@ class AdvertController
     public function index(ServerRequest $request, Response $response)
     {
         $advertsRepo = new AdvertRepository();
-        $adverts     = $advertsRepo->getAll();
+        $adverts = $advertsRepo->getAll();
+
 
         $view = Twig::fromRequest($request);
 
         return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
     }
 
-    public function newAdvert(ServerRequest $request, Response $response) {
+    public function newAdvert(ServerRequest $request, Response $response)
+    {
         $view = Twig::fromRequest($request);
 
         return $view->render($response, 'adverts/new.twig');
@@ -28,23 +30,23 @@ class AdvertController
 
     public function create(ServerRequest $request, Response $response)
     {
-        $repo        = new AdvertRepository();
-        $advertData  = $request->getParsedBodyParam('advert', []);
 
+        $repo = new AdvertRepository();
+        $advertData = $request->getParsedBodyParam('advert', []);
         $validator = new AdvertValidator();
-        $errors    = $validator->validate($advertData);
+        $errors = $validator->validate($advertData);
 
         if (!empty($errors)) {
             $view = Twig::fromRequest($request);
 
             return $view->render($response, 'adverts/new.twig', [
-                'data'   => $advertData,
+                'data' => $advertData,
                 'errors' => $errors,
             ]);
         }
 
         $repo->create($advertData);
-
+        ;
         return $response->withRedirect('/adverts');
     }
 }
