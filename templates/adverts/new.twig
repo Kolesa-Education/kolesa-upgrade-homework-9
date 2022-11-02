@@ -1,10 +1,10 @@
 {% extends "base.twig" %}
 
 {% block body %}
-    <h1>Подать новое объявление</h1>
+    <h1>New Advert</h1>
 
     {% if errors is not empty %}
-        <div style="color: red">При сохранении произошла ошибка</div>
+        <div style="color: red">Error while saving</div>
         <ul>
             {% for error in errors %}
                 <li>
@@ -16,7 +16,7 @@
     <form action="/adverts" method="post">
         <div>
             <label>
-                Заголовок *
+                Title *
                 <input type="text" name="advert[title]" value="{{ data.title ?? '' }}">
                 {% if errors.title %}
                     <div style="color: red">{{ errors.title }}</div>
@@ -26,7 +26,7 @@
         <br>
         <div>
             <label>
-                Описание *
+                Description *
                 <input type="text" name="advert[description]" value="{{ data.description ?? '' }}">
                 {% if errors.description %}
                     <div style="color: red">{{ errors.description }}</div>
@@ -36,7 +36,7 @@
         <br>
         <div>
             <label>
-                Цена *
+                Price *
                 <input type="number" name="advert[price]" value="{{ data.price ?? 0 }}">
                 {% if errors.price %}
                     <div style="color: red">{{ errors.price }}</div>
