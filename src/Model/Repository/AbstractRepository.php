@@ -8,7 +8,7 @@ use PDOException;
 abstract class AbstractRepository
 {
     private const CONFIG_PATH = '../src/Model/Repository/db_config.json';
-    private PDO $connection;
+    protected PDO $connection;
 
 
     public function __construct()
