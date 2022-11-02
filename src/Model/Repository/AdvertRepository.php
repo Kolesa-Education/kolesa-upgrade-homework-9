@@ -50,6 +50,50 @@ class AdvertRepository extends AbstractRepository
         return $advertObject;
     }
 
+    public function getByCategoryId(int $id){
+        $advertOutput = $this->getConnection()->query("SELECT * FROM adverts WHERE category_id=$id;")->fetchAll(PDO::FETCH_ASSOC);
+        
+        if(count($advertOutput) === 0){
+            return null;
+        }
+        $result = [];
+
+        foreach ($advertOutput as $advertData) {
+            $advertObject = new Advert($advertData);
+
+            $categoryRepo = new CategoryRepository();
+            $categoryId = $advertData["category_id"];
+            $categoryObject = $categoryRepo->getById($categoryId);
+            
+            $advertObject->setCategory($categoryObject);
+            $result[] = $advertObject;
+        }
+
+        return $result;
+    }
+
+    public function getByTitle(string $text){
+        $advertOutput = $this->getConnection()->query("SELECT * FROM adverts WHERE CONTAINS(title, $text);")->fetchAll(PDO::FETCH_ASSOC);
+        
+        if(count($advertOutput) === 0){
+            return null;
+        }
+        $result = [];
+
+        foreach ($advertOutput as $advertData) {
+            $advertObject = new Advert($advertData);
+
+            $categoryRepo = new CategoryRepository();
+            $categoryId = $advertData["category_id"];
+            $categoryObject = $categoryRepo->getById($categoryId);
+            
+            $advertObject->setCategory($categoryObject);
+            $result[] = $advertObject;
+        }
+
+        return $result;
+    }
+
     public function create(array $advertData): Advert {
         $query = "INSERT INTO adverts(title, description, price, category_id) VALUES (:title, :description, :price, :category_id)";
 

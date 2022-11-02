@@ -29,6 +29,24 @@ class AdvertController
         return $response->write("Done");
     }
 
+    public function search(ServerRequest $request, Response $response, array $args)
+    {
+        $result = [];
+        $advertsRepo = new AdvertRepository();
+        $params = $request->getParams();
+        if(!is_null($params['category'])){
+            $result = $advertsRepo->getByCategoryId(intval($params['category']));
+        }
+
+        if(!is_null($params['title'])){
+            $result = $advertsRepo->getByTitle($params['title']);
+        }
+
+        $view = Twig::fromRequest($request);
+
+        return $view->render($response, 'adverts/index.twig', ['adverts' => $result]);
+    }
+
 
 
     public function newAdvert(ServerRequest $request, Response $response)
@@ -70,7 +88,7 @@ class AdvertController
         $categoryData  = $request->getParsedBodyParam('category');
         $categoryDataArr = explode('.', $categoryData);
         $categoryArr = ["id" => $categoryDataArr[0], "name" => $categoryDataArr[1]];
-        
+
         $advertData['category_id'] = $categoryArr["id"];
 
         $validator = new AdvertValidator();
