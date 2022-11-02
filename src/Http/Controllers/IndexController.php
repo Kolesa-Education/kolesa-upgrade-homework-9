@@ -10,7 +10,6 @@ class IndexController
     public function home(ServerRequest $request, Response $response)
     {
         $view = Twig::fromRequest($request);
-
         return $view->render($response, 'home.twig', ['name' => 'guest']);
     }
 }

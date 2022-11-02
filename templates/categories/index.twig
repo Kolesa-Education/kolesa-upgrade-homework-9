@@ -1,0 +1,13 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    <h1>Список объявлений</h1>
+    <div>
+        <a href="/categories/new">Create category</a>
+    </div>
+    <ul>
+        {% for categories in category %}
+            <li><a href="/categories/{{ category.getId() }}">{{ category.getTitle() }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}

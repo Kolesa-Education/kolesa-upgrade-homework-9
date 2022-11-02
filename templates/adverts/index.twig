@@ -2,10 +2,12 @@
 
 {% block body %}
     <h1>Список объявлений</h1>
-
+    <div>
+        <a href="/adverts/new">Create advert</a>
+    </div>
     <ul>
         {% for advert in adverts %}
-            <li>{{ advert.getTitle() }}</li>
+            <li><a href="/advert/{{ advert.getId() }}">{{ advert.getTitle() }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

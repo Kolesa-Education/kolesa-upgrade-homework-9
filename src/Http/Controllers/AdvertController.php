@@ -20,7 +20,7 @@ class AdvertController
         return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
     }
 
-    public function newAdvert(ServerRequest $request, Response $response) {
+    public function new(ServerRequest $request, Response $response) {
         $view = Twig::fromRequest($request);
 
         return $view->render($response, 'adverts/new.twig');
