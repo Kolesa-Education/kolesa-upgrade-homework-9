@@ -4,5 +4,11 @@
         "description": "Батарейка 100%",
         "price": "80000",
         "id": 1
+    },
+    "2": {
+        "title": "sfffsdfsdfsfdsdf",
+        "description": "affdssffdsdfsdf",
+        "price": "1",
+        "id": 2
     }
 }

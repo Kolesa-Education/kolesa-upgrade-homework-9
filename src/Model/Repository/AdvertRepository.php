@@ -3,6 +3,7 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Advert;
+use App\Model\Entity\Exception;
 
 class AdvertRepository
 {
@@ -29,6 +30,34 @@ class AdvertRepository
 
         return new Advert($advertData);
     }
+
+    public function put(array $advertData): Advert {
+        $db    = $this->getDB();;
+        $db[$advertData->getID()]   = $advertData;
+        $this->saveDB($db);
+        return new Advert($advertData);
+    }    
+
+    public function getAdvertById(int $id): Advert {
+        foreach ($this->getAll() as $advertData) {
+            if($advertData->getID() === $id) {
+                $advert = $advertData;
+                return $advert;
+            }
+        }
+        throw new Exception('not found');
+    }
+
+    public function editAdvertById(int $id): Advert {
+        foreach ($this->getAll() as $advertData) {
+            if($advertData->getID() === $id) {
+                $advert = new Advert($advertData);
+                return $advert;
+            }
+        }
+        throw new Exception('not found');
+    }
+
 
     private function getDB(): array
     {
