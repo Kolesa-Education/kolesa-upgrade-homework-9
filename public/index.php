@@ -19,5 +19,6 @@ $app->get('/adverts/{id}', Controllers\AdvertController::class . ':advertPage');
 $app->get('/adverts/{id}/edit', Controllers\AdvertController::class . ':advertEdit');
 $app->post('/adverts', Controllers\AdvertController::class . ':create');
 $app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':edit');
+$app->post('/adverts/{id}/delete', Controllers\AdvertController::class . ':delete');
 
 $app->run();

@@ -18,7 +18,6 @@ class AdvertDatabase
         try {
             self::$connection = new \PDO("mysql:host=".
             self::DB_HOST . ";dbname=" . self::DB_NAME, self::DB_USER, self::DB_PASS);
-            echo "Connected to " . self::DB_NAME . " at " . self::DB_HOST . " successfully.";
         } catch (PDOException $pe) {
             die("Could not connect to the database " . self::DB_NAME . ":" . $pe->getMessage());
         }

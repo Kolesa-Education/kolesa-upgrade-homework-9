@@ -89,4 +89,14 @@ class AdvertController
 
         return $response->withRedirect('/adverts');
     }
+    
+    public function delete(ServerRequest $request, Response $response, array $args)
+    {
+        $repo = new AdvertRepository();
+
+        $adId = $args['id'];
+        $repo->delete($adId);
+
+        return $response->withRedirect('/adverts');
+    }
 }

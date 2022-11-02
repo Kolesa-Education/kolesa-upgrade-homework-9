@@ -5,7 +5,10 @@
 
     <ul>
         {% for advert in adverts %}
-            <li><a href="/adverts/{{ advert.getId }}">{{ advert.getTitle() }}</a> <a href="/adverts/{{ advert.getId }}/edit"><button style="cursor: pointer;">Редактировать</button></a></li>
+            <li><a href="/adverts/{{ advert.getId }}">{{ advert.getTitle() }}</a> 
+            <a href="/adverts/{{ advert.getId }}/edit"><button style="cursor: pointer;">Редактировать</button></a>
+            <form method="post" style="display: inline;" action="/adverts/{{ advert.getId }}/delete"><button type="submit" style="cursor: pointer;">Удалить</button></form>
+            </li>
         {% endfor %}
     </ul>
 {% endblock %}
