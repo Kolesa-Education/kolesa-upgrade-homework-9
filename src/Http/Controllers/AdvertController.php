@@ -13,14 +13,16 @@ class AdvertController
     public function index(ServerRequest $request, Response $response)
     {
         $advertsRepo = new AdvertRepository();
-        $adverts     = $advertsRepo->getAll();
+        $title = $request->getQueryParam('title');
+        $adverts = ($title != NULL) ? $advertsRepo->getByTitle($title) : $advertsRepo->getAll();
 
         $view = Twig::fromRequest($request);
 
-        return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
+        return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts, 'title' => $title]);
     }
 
-    public function newAdvert(ServerRequest $request, Response $response) {
+    public function newAdvert(ServerRequest $request, Response $response)
+    {
         $view = Twig::fromRequest($request);
 
         return $view->render($response, 'adverts/new.twig');
@@ -48,7 +50,8 @@ class AdvertController
         return $response->withRedirect('/adverts');
     }
 
-    public function showAdvert(ServerRequest $request, Response $response, $id) {
+    public function showAdvert(ServerRequest $request, Response $response, $id)
+    {
         $advertsRepo = new AdvertRepository();
         $advert     = $advertsRepo->getAdvert($id['id']);
         $view = Twig::fromRequest($request);
@@ -56,7 +59,8 @@ class AdvertController
         return $view->render($response, 'adverts/show.twig', ['advert' => $advert]);
     }
 
-    public function getEditAdvert(ServerRequest $request, Response $response, $id) {
+    public function getEditAdvert(ServerRequest $request, Response $response, $id)
+    {
         $advertsRepo = new AdvertRepository();
         $advert     = $advertsRepo->getAdvert($id['id']);
         $view = Twig::fromRequest($request);
@@ -64,7 +68,8 @@ class AdvertController
         return $view->render($response, 'adverts/edit.twig', ['advert' => $advert]);
     }
 
-    public function postEditAdvert(ServerRequest $request, Response $response) {
+    public function postEditAdvert(ServerRequest $request, Response $response)
+    {
         $repo        = new AdvertRepository();
         $advertData  = $request->getParsedBodyParam('advert', []);
 

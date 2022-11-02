@@ -23,6 +23,17 @@ class AdvertRepository
         return $result;
     }
 
+    public function getByTitle($title)
+    {
+        $result = [];
+
+        foreach ($this->getWithTitle($title) as $advertData) {
+            $result[] = new Advert($advertData);
+        }
+
+        return $result;
+    }
+
     public function getAdvert($id)
     {
         $db = $this->getDB();
@@ -43,6 +54,23 @@ class AdvertRepository
     {
         $this->updateDB($advertData);
         return new Advert($advertData);
+    }
+
+    private function getWithTitle($title): array
+    {
+        // return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+        $conn = mysqli_connect(self::dbHost, self::dbUser, self::dbPass, self::dbName);
+        if ($conn == false) {
+            print(mysqli_connect_error());
+            return [];
+        }
+        mysqli_set_charset($conn, "utf8");
+
+        $sql = 'SELECT `id`, `title`, `description`, `price` FROM `adverts` WHERE `title` LIKE "%'.$title.'%"';
+        $result = mysqli_query($conn, $sql);
+        $allAdverts = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+        return $allAdverts ?? [];
     }
 
     private function getDB(): array
