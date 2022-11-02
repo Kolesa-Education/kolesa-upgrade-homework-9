@@ -36,6 +36,27 @@ class AdvertController
         return $view->render($response,'adverts/singleAdvert.twig',['advert'=>$advert]);
     }
 
+    public function editAdvert(ServerRequest $request, Response $response) {
+        $repo        = new AdvertRepository();
+        $advertData  = $request->getParsedBodyParam('advert', []);
+
+        $validator = new AdvertValidator();
+        $errors    = $validator->validate($advertData);
+
+        if (!empty($errors)) {
+            $view = Twig::fromRequest($request);
+
+            return $view->render($response, 'adverts/edit.twig', [
+                'data'   => $advertData,
+                'errors' => $errors,
+            ]);
+        }
+
+        $repo->edit($advertData);
+
+        return $response->withRedirect('/adverts');
+    }
+
     public function create(ServerRequest $request, Response $response)
     {
         $repo        = new AdvertRepository();
