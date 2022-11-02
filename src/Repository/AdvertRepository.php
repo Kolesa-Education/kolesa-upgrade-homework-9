@@ -19,7 +19,7 @@ class AdvertRepository implements InterfaceAdvertRepository
             ->getQuery()->getResult();
     }
 
-    public function find(int $id): Advert
+    public function find(int $id): ?Advert
     {
         return $this->em->getRepository(Advert::class)->find($id);
     }
