@@ -4,5 +4,17 @@
         "description": "Батарейка 100%",
         "price": "80000",
         "id": 1
+    },
+    "2": {
+        "title": "Lada Priora",
+        "description": "В хорошем состоянии",
+        "price": "15000",
+        "id": 2
+    },
+    "3": {
+        "id": "3",
+        "title": "Сматрфон Apple",
+        "description": "Apple в хорошем состоянии",
+        "price": "35000"
     }
 }

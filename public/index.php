@@ -2,7 +2,8 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Http\Controllers;
+use App\Http\Controllers\AdvertController;
+use App\Http\Controllers\IndexController;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
@@ -12,9 +13,12 @@ $app  = AppFactory::create();
 $app->addErrorMiddleware(true, true, true);
 $app->add(TwigMiddleware::create($app, $twig));
 
-$app->get('/', Controllers\IndexController::class . ':home');
-$app->get('/adverts', Controllers\AdvertController::class . ':index');
-$app->get('/adverts/new', Controllers\AdvertController::class . ':newAdvert');
-$app->post('/adverts', Controllers\AdvertController::class . ':create');
+$app->get('/', IndexController::class . ':home');
+$app->get('/adverts', AdvertController::class . ':index');
+$app->get('/adverts/new', AdvertController::class . ':newAdvert');
+$app->post('/adverts', AdvertController::class . ':create');
+$app->get('/adverts/{id}',AdvertController::class . ':getAdvert');
+$app->get('/adverts/{id}/edit', AdvertController::class . ':editAdvertView');
+$app->post('/adverts/{id}/edit', AdvertController::class . ':editAdvert');
 
 $app->run();
