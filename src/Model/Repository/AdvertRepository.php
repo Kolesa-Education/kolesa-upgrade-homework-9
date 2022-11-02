@@ -23,7 +23,7 @@ class AdvertRepository extends AbstractRepository
             $categoryRepo = new CategoryRepository();
             $categoryId = $advertData["category_id"];
             $categoryObject = $categoryRepo->getById($categoryId);
-            
+
             $advertObject->setCategory($categoryObject);
             $result[] = $advertObject;
         }
@@ -31,10 +31,11 @@ class AdvertRepository extends AbstractRepository
         return $result;
     }
 
-    public function getById(int $id){
+    public function getById(int $id)
+    {
         $advertOutput = $this->getConnection()->query("SELECT * FROM adverts WHERE id=$id;")->fetchAll(PDO::FETCH_ASSOC);
-        
-        if(count($advertOutput) === 0){
+
+        if (count($advertOutput) === 0) {
             return null;
         }
         $advertOutput = $advertOutput[0];
@@ -45,15 +46,23 @@ class AdvertRepository extends AbstractRepository
 
         $advertObject = new Advert($advertOutput);
         $advertObject->setCategory($categoryObject);
-        
-        
+
+
         return $advertObject;
     }
 
-    public function getByCategoryId(int $id){
-        $advertOutput = $this->getConnection()->query("SELECT * FROM adverts WHERE category_id=$id;")->fetchAll(PDO::FETCH_ASSOC);
+    public function getByCategory(string $name)
+    {
+        $advertOutput = $this->getConnection()->query(
+            "
+                SELECT * FROM adverts 
+                INNER JOIN categories ON  categories.id=adverts.category_id
+                WHERE categories.name='$name';
+            "
+        )->fetchAll(PDO::FETCH_ASSOC);
         
-        if(count($advertOutput) === 0){
+
+        if (count($advertOutput) === 0) {
             return null;
         }
         $result = [];
@@ -64,7 +73,7 @@ class AdvertRepository extends AbstractRepository
             $categoryRepo = new CategoryRepository();
             $categoryId = $advertData["category_id"];
             $categoryObject = $categoryRepo->getById($categoryId);
-            
+
             $advertObject->setCategory($categoryObject);
             $result[] = $advertObject;
         }
@@ -72,10 +81,11 @@ class AdvertRepository extends AbstractRepository
         return $result;
     }
 
-    public function getByTitle(string $text){
+    public function getByTitle(string $text)
+    {
         $advertOutput = $this->getConnection()->query("SELECT * FROM adverts WHERE title LIKE '%$text%'")->fetchAll(PDO::FETCH_ASSOC);
-        
-        if(count($advertOutput) === 0){
+
+        if (count($advertOutput) === 0) {
             return null;
         }
         $result = [];
@@ -86,7 +96,7 @@ class AdvertRepository extends AbstractRepository
             $categoryRepo = new CategoryRepository();
             $categoryId = $advertData["category_id"];
             $categoryObject = $categoryRepo->getById($categoryId);
-            
+
             $advertObject->setCategory($categoryObject);
             $result[] = $advertObject;
         }
@@ -94,7 +104,8 @@ class AdvertRepository extends AbstractRepository
         return $result;
     }
 
-    public function create(array $advertData): Advert {
+    public function create(array $advertData): Advert
+    {
         $query = "INSERT INTO adverts(title, description, price, category_id) VALUES (:title, :description, :price, :category_id)";
 
         $result_query = $this->connection->prepare($query);
@@ -103,7 +114,8 @@ class AdvertRepository extends AbstractRepository
         return new Advert($advertData);
     }
 
-    public function update(int $id, array $advertData) {
+    public function update(int $id, array $advertData)
+    {
         $query = "
                     UPDATE adverts 
                     SET title=:title, description=:description, price=:price, category_id=:category_id  

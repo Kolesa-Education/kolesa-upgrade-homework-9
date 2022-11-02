@@ -35,28 +35,52 @@ class AdvertController
         $result = [];
         $results1 = [];
         $results2 = [];
+
         $advertsRepo = new AdvertRepository();
+        $view = Twig::fromRequest($request);
+
         $params = $request->getParams();
+
         if(!is_null($params['category']??null)){
-            $results1 = $advertsRepo->getByCategoryId(intval($params['category']))??[];
+            $results1 = $advertsRepo->getByCategory($params['category'])??[];
         }
 
         if(!is_null($params['title']??null)){
             $results2 = $advertsRepo->getByTitle($params['title'])??[];
         }
-        $result = array_uintersect(
-            $results1, $results2,
-            function(Advert $result1, Advert $result2) {
-                if($result1->getTitle() === $result2->getTitle()){
-                    return 0;
-                }
+        if(!is_null($params['category']??null)&&!is_null($params['title']??null)){
+
+            if((count($results1)===0 || count($results2)===0)){
+                return $view->render($response, 'adverts/index.twig', ['adverts' => []]);
             }
-        );
+            $result = array_uintersect(
+                $results1, $results2,
+                function(Advert $result1, Advert $result2) {
+                    if($result1->getTitle() === $result2->getTitle()){
+                        return 0;
+                    }
+                }
+            );
+            return $view->render($response, 'adverts/index.twig', ['adverts' => $result]);
+        }
+
+        
+        if(count($results1)!==0){
+            return $view->render($response, 'adverts/index.twig', ['adverts' => $results1]);
+        }
+        else if(count($results2)!==0){
+            return $view->render($response, 'adverts/index.twig', ['adverts' => $results2]);
+        }
+        
+        
+
+        return $view->render($response, 'adverts/index.twig', ['adverts' => []]);
+        
 
 
-        $view = Twig::fromRequest($request);
+        
 
-        return $view->render($response, 'adverts/index.twig', ['adverts' => $result]);
+        
     }
 
 
