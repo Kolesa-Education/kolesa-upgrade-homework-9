@@ -71,6 +71,7 @@ class AdvertRepository
         $allAdverts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         return $allAdverts ?? [];
+        mysqli_close($conn);
     }
 
     private function getDB(): array
@@ -88,6 +89,7 @@ class AdvertRepository
         $allAdverts = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
         return $allAdverts ?? [];
+        mysqli_close($conn);
     }
 
     private function saveDB(array $data): void
@@ -112,6 +114,7 @@ class AdvertRepository
         if ($result == false) {
             print("Произошла ошибка при выполнении запроса");
         }
+        mysqli_close($conn);
     }
 
     private function updateDB(array $data): void
@@ -137,5 +140,6 @@ class AdvertRepository
         if ($result == false) {
             print("Произошла ошибка при выполнении запроса");
         }
+        mysqli_close($conn);
     }
 }
