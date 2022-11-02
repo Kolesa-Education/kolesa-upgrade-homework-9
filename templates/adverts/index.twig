@@ -1,11 +1,21 @@
 {% extends "base.twig" %}
 
 {% block body %}
-    <h1>Список объявлений</h1>
+	<h1>Список объявлений</h1>
 
-    <ul>
-        {% for advert in adverts %}
-            <li>{{ advert.getTitle() }}</li>
-        {% endfor %}
-    </ul>
-{% endblock %}
+	<form action="/adverts" method="get">
+		<input type="text" name="title" value="{{ title }}">
+		<button>Поиск</button>
+	</form>
+    <br/>
+
+    <a href="/adverts/new"><button>Добавить новое объявление</button></a>
+
+	<ul>
+		    {% for advert in adverts %}
+			<li>
+				<a href="/adverts/{{ advert.getId() }}/edit">{{ advert.getTitle() }}
+            </li>
+			{% endfor %}
+		</ul>
+	{% endblock %}

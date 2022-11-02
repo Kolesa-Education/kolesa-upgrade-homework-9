@@ -1,7 +1,7 @@
 {% extends "base.twig" %}
 
 {% block body %}
-    <h1>Изменить объявление</h1>
+    <h1>Подать новое объявление</h1>
 
     {% if errors is not empty %}
         <div style="color: red">При сохранении произошла ошибка</div>
@@ -13,11 +13,12 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <form action="/adverts" method="post">
+    <form action="/adverts/edit" method="post">
+    <input type="hidden" name="advert[id]" value="{{ advert.getId() ?? '' }}">
         <div>
             <label>
                 Заголовок *
-                <input type="text" name="advert[title]" value="{{ data.title ?? '' }}">
+                <input type="text" name="advert[title]" value="{{ advert.getTitle() ?? '' }}">
                 {% if errors.title %}
                     <div style="color: red">{{ errors.title }}</div>
                 {% endif %}
@@ -27,7 +28,7 @@
         <div>
             <label>
                 Описание *
-                <input type="text" name="advert[description]" value="{{ data.description ?? '' }}">
+                <input type="text" name="advert[description]" value="{{ advert.getDescription() ?? '' }}">
                 {% if errors.description %}
                     <div style="color: red">{{ errors.description }}</div>
                 {% endif %}
@@ -37,14 +38,13 @@
         <div>
             <label>
                 Цена *
-                <input type="number" name="advert[price]" value="{{ data.price ?? 0 }}">
+                <input type="number" name="advert[price]" value="{{ advert.getPrice() ?? 0 }}">
                 {% if errors.price %}
                     <div style="color: red">{{ errors.price }}</div>
                 {% endif %}
             </label>
         </div>
         <br>
-        <input type="submit" value="Create">
+        <input type="submit" value="Edit">
     </form>
 {% endblock %}
-

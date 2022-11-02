@@ -8,7 +8,7 @@ class AdvertValidator implements ValidatorInterface
     private const MIN_TITLE_LENGTH = 10;
     private const MAX_TITLE_LENGTH = 80;
     private const MIN_PRICE = 0;
-    private const MAX_PRICE = 100000;
+    private const MAX_PRICE = 1000000;
 
     public function validate(array $data): array
     {

@@ -4,5 +4,17 @@
         "description": "Батарейка 100%",
         "price": "80000",
         "id": 1
+    },
+    "2": {
+        "id": "2",
+        "title": "Продам ноутбук(edit)",
+        "description": "Lenovo legion 5",
+        "price": "40000"
+    },
+    "3": {
+        "id": "3",
+        "title": "Продам iPhone 5",
+        "description": "Батарейка 70%",
+        "price": "40000"
     }
 }
