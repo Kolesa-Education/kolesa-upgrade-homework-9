@@ -2,8 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Http\IndexController;
-use App\Http\AdvertController;
+use App\Http\Controllers;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
@@ -19,7 +18,9 @@ $app->get('/adverts/new', Controllers\AdvertController::class . ':newAdvert');
 $app->post('/adverts', Controllers\AdvertController::class . ':create');
 
 $app->get('/adverts/{id}', Controllers\AdvertController::class . ':advertPage');
-$app->get('/adverts/{id}/edit', Controllers\AdvertController::class . ':advertEdit');//
-$app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':edit');//
+$app->get('/adverts/{id}/edit', Controllers\AdvertController::class . ':advertEdit');
+$app->get('/adverts/{id}/delete', Controllers\AdvertController::class . ':removeAdvert');
+$app->post('/adverts/{id}/delete', Controllers\AdvertController::class . ':deleteAdvert');
+$app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':edit');
 
 $app->run();
