@@ -34,4 +34,20 @@ class AdvertRepository implements InterfaceAdvertRepository
         $this->em->flush();
         return $advert;
     }
+
+    public function update(array $data, int $id): void
+    {
+        $query = $this->em->createQueryBuilder()
+            ->update(Advert::class,'a')
+            ->set('a.title' ,':title')
+            ->set('a.description' ,':description')
+            ->set('a.price' ,':price')
+            ->where('a.id = :id')
+            ->setParameter('title',$data['title'])
+            ->setParameter('description',$data['description'])
+            ->setParameter('price',$data['price'])
+            ->setParameter('id',$id)
+            ->getQuery();
+        $result = $query->execute();
+    }
 }

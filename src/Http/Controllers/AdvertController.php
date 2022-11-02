@@ -75,21 +75,28 @@ class AdvertController
         return $response->withRedirect('/adverts');
     }
 
+    public function renderUpdate(ServerRequest $request, Response $response): Response|ResponseInterface
+    {
+        return Twig::fromRequest($request)->render($response, 'adverts/edit.twig', [
+            'id' => $request->getAttribute('id'),
+        ]);
+    }
+
     public function update(ServerRequest $request, Response $response): Response|ResponseInterface
     {
-        $repo = new AdvertRepository();
         $advertData = $request->getParsedBodyParam('advert', []);
 
         $validator = new AdvertValidator();
         $errors = $validator->validate($advertData);
-
+        $id = $request->getAttribute('id');
         if (!empty($errors)) {
-            return Twig::fromRequest($request)->render($response, 'adverts/new.twig', [
+            return Twig::fromRequest($request)->render($response, 'adverts/edit.twig', [
                 'data' => $advertData,
                 'errors' => $errors,
+                'id' => $id,
             ]);
         }
-        $repo->create($advertData);
-        return $response->withRedirect('/adverts');
+        $this->repo->update($advertData, $id);
+        return $response->withRedirect('/adverts/' . $id);
     }
 }

@@ -11,4 +11,6 @@ interface InterfaceAdvertRepository
     public function find(int $id): ?Advert;
 
     public function create(array $advertData): Advert;
+
+    public function update(array $data, int $id): void;
 }
