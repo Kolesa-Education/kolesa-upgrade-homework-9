@@ -3,14 +3,11 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Advert;
+use App\Infrastructure\Database\AdvertDatabase;
 
 class AdvertRepository
 {
     // private const DB_PATH = '../storage/adverts.json';
-    private const DB_HOST = 'localhost';
-    private const DB_USER = 'root';
-    private const DB_PASS = '';
-    private const DB_NAME = 'adverts';
 
     public function getAll()
     {
@@ -45,42 +42,23 @@ class AdvertRepository
 
     private function getDB(): array
     {
-        $link = mysqli_connect(self::DB_HOST, self::DB_USER, self::DB_PASS, self::DB_NAME);
-        if ($link == false){
-            print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
-            return [];
-        }
-        else {
-            print("Соединение установлено успешно");
-        }
-        mysqli_set_charset($link, "utf8");
-
-        $sql = 'SELECT id, title, description, price FROM adverts';
-        $result = mysqli_query($link, $sql);
-        $ads = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        $pdo = AdvertDatabase::getConnection();
+        $sql = $pdo::$connection->query("SELECT * FROM adverts");
+        $ads = $sql->fetch(\PDO::FETCH_ASSOC);
+        print_r($ads);
 
         return $ads ?? [];
     }
 
     private function saveDB(array $data):void
     {
-        $link = mysqli_connect(self::DB_HOST, self::DB_USER, self::DB_PASS, self::DB_NAME);
-        if ($link == false){
-            print("Ошибка: Невозможно подключиться к MySQL " . mysqli_connect_error());
-            return;
-        }
-        else {
-            print("Соединение установлено успешно");
-        }
-        mysqli_set_charset($link, "utf8");
-
+        $pdo = AdvertDatabase::getConnection();
+        
         $adTitle = $data['title'];
         $adDescription = $data['description'];
         $adPrice = $data['price'];
-        $sql = 'INSERT INTO adverts(title, description, price) 
-                VALUES ' . $adTitle . ', ' . $adDescription .', ' . $adPrice;
-        
-        $result = mysqli_query($link, $sql);
+        $result = $pdo::$connection->query('INSERT INTO adverts(title, description, price) 
+        VALUES ' . $adTitle . ', ' . $adDescription .', ' . $adPrice);
         if ($result == false) {
             print("Произошла ошибка при выполнении запроса");
         }
