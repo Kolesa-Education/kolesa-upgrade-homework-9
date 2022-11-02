@@ -21,12 +21,26 @@ class AdvertRepository
 
     public function getById(int $id): ?Advert{
         $adverts = $this->getDB();
-        for ($i=0; $i<count($adverts); $i++){
+        for ($i=0; $i<=count($adverts); $i++){
             if ($adverts[$i]['id'] == $id){
                 return new Advert($adverts[$i]);
             }
         }
         return null;
+    }
+
+    public function getViewId($id)
+    {
+        $result = [];
+
+        foreach ($this->getDB() as $advertData) {
+            if ((int) $id==$advertData['id'])
+            {
+                $result[] = new Advert($advertData);
+            }
+        }
+
+        return $result;
     }
 
     public function edit(array $advertData): Advert {
