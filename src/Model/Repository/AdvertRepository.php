@@ -3,47 +3,85 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Advert;
+use App\Model\Entity\Category;
+use PDO;
+use PDOException;
+
+use App\Model\Repository\CategoryRepository;
 
 class AdvertRepository
 {
-    private const DB_PATH = '../storage/adverts.json';
+    private const CONFIG_PATH = '../src/Model/Repository/db_config.json';
+    private PDO $connection;
+
+    public function __construct()
+    {
+        $config = json_decode(file_get_contents(self::CONFIG_PATH), true) ?? [];
+        
+        $dns = 'mysql:host='.$config["host"].';dbname='.$config["dbName"];
+        try{
+            $dbConnection = new PDO($dns, $config["username"], $config["password"]);
+        }catch(PDOException $e){
+            return null;
+        }
+        
+        
+        $this->setConnection($dbConnection);
+    }
+
 
     public function getAll()
     {
         $result = [];
 
         foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
+            $advertObject = new Advert($advertData);
+
+            $categoryRepo = new CategoryRepository();
+            $categoryId = $advertData["category_id"];
+            $categoryObject = $categoryRepo->getById($categoryId);
+            
+            $advertObject->setCategory($categoryObject);
+            $result[] = $advertObject;
         }
 
         return $result;
     }
 
-    public function getById(int $id)
-    {
-        $arr = $this->getDB();
-        foreach ($arr as $advertData) {
-            if ($advertData["id"] === $id) {
-                return new Advert($advertData);
-            }
+    public function getById(int $id){
+        $advertOutput = $this->getConnection()->query("SELECT * FROM adverts WHERE id=$id;")->fetchAll(PDO::FETCH_ASSOC);
+        
+        if($advertOutput === false){
+            return null;
         }
-        return null;
+        $advertOutput = $advertOutput[0];
+
+        $categoryRepo = new CategoryRepository();
+        $categoryId = $advertOutput["category_id"];
+        $categoryObject = $categoryRepo->getById($categoryId);
+
+        $advertObject = new Advert($advertOutput);
+        $advertObject->setCategory($categoryObject);
+        
+        
+        return $advertObject;
     }
 
-    public function create(array $advertData): Advert
-    {
-        $db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
-        $advertData['id'] = $increment;
-        $db[$increment]   = $advertData;
+    public function create(array $advertData): Advert {
+        $categoryId = $advertData["category"]["id"];
+        unset($advertData["category"]);
+        $advertData["category_id"] = intval($categoryId);
 
-        $this->saveDB($db);
+
+        $query = "INSERT INTO adverts(title, description, price, category_id) VALUES (:title, :description, :price, :category_id)";
+
+        $result_query = $this->connection->prepare($query);
+        $result_query->execute($advertData);
 
         return new Advert($advertData);
     }
 
-    public function update(int $id, array $advertData)
-    {
+    public function update(int $id, array $advertData) {
         $db = $this->getDB();
         $db[$id]   = $advertData;
 
@@ -54,11 +92,31 @@ class AdvertRepository
 
     private function getDB(): array
     {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+        $adverts = $this->getConnection()->query("SELECT * FROM adverts");
+        return $adverts->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    private function saveDB(array $data): void
+    private function saveDB(array $data):void
     {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+    }
+
+    public function getConnection(): PDO
+    {
+        return $this->connection;
+    }
+
+    /**
+     * Set the value of connection
+     *
+     * @param PDO $connection
+     *
+     * @return self
+     */
+    public function setConnection(PDO $connection): self
+    {
+        $this->connection = $connection;
+
+        return $this;
     }
 }

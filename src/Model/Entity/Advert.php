@@ -69,4 +69,19 @@ class Advert
 
         return $this;
     }
+
+
+    /**
+     * Set the value of category
+     *
+     * @param ?Category $category
+     *
+     * @return self
+     */
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
 }

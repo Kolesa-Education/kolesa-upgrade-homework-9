@@ -3,10 +3,30 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Category;
+use PDO;
+use PDOException;
+
+use function PHPSTORM_META\type;
 
 class CategoryRepository
 {
-    private const DB_PATH = '../storage/categories.json';
+    private const CONFIG_PATH = '../src/Model/Repository/db_config.json';
+    private PDO $connection;
+
+    public function __construct()
+    {
+        $config = json_decode(file_get_contents(self::CONFIG_PATH), true) ?? [];
+        
+        $dns = 'mysql:host='.$config["host"].';dbname='.$config["dbName"];
+        try{
+            $dbConnection = new PDO($dns, $config["username"], $config["password"]);
+        }catch(PDOException $e){
+            return null;
+        }
+        
+        
+        $this->setConnection($dbConnection);
+    }
 
     public function getAll()
     {
@@ -21,34 +41,42 @@ class CategoryRepository
 
     public function getById(int $id)
     {
-        $arr = $this->getDB();
-        foreach ($arr as $categoryData) {
-            if ($categoryData["id"] === $id) {
-                return new Category($categoryData);
-            }
+        $categoryOutput = $this->getConnection()->query("SELECT * FROM categories WHERE id=$id")->fetchAll(PDO::FETCH_ASSOC);
+        if($categoryOutput === false){
+            return null;
         }
-        return null;
-    }
-
-    public function create(array $categoryData): Category
-    {
-        $db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
-        $categoryData['id'] = $increment;
-        $db[$increment]   = $categoryData;
-
-        $this->saveDB($db);
-
-        return new Category($categoryData);
+        $categoryOutput = $categoryOutput[0];
+        $categoryObject = new Category($categoryOutput);
+        return $categoryObject;
     }
 
     private function getDB(): array
     {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+        $categories = $this->getConnection()->query("SELECT * FROM categories");
+        return $categories->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    private function saveDB(array $data): void
+    /**
+     * Get the value of connection
+     *
+     * @return PDO
+     */
+    public function getConnection(): PDO
     {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
+        return $this->connection;
+    }
+
+    /**
+     * Set the value of connection
+     *
+     * @param PDO $connection
+     *
+     * @return self
+     */
+    public function setConnection(PDO $connection): self
+    {
+        $this->connection = $connection;
+
+        return $this;
     }
 }

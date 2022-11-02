@@ -20,4 +20,5 @@ $app->get('/adverts/{id}', Controllers\AdvertController::class . ':showAdvert');
 $app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':update');
 $app->get('/adverts/{id}/edit', Controllers\AdvertController::class . ':updateAdvert');
 
+$app->get('/check', Controllers\AdvertController::class . ':check');
 $app->run();
