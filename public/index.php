@@ -16,5 +16,12 @@ $app->get('/', Controllers\IndexController::class . ':home');
 $app->get('/adverts', Controllers\AdvertController::class . ':index');
 $app->get('/adverts/new', Controllers\AdvertController::class . ':newAdvert');
 $app->post('/adverts', Controllers\AdvertController::class . ':create');
+$app->get('/adverts/{id}', Controllers\AdvertController::class . ':getAdvertById');
+
+
+
+$app->get('/adverts/{id}/edit', Controllers\AdvertController::class . ':showToEdit' );
+$app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':editAdvert' );
+
 
 $app->run();
