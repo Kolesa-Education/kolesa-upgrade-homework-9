@@ -21,15 +21,7 @@ try {
     die(500);
 }
 
-$params = [
-    'host' => $_ENV['DB_HOST'],
-    'user' => $_ENV['DB_USER'],
-    'password' => $_ENV['DB_PASSWORD'],
-    'dbname' => $_ENV['DB_DATABASE'],
-    'driver' => $_ENV['DB_DRIVER'] ?? 'pdo_mysql',
-];
-
-$dotenv = Dotenv::createImmutable(dirname(__DIR__));
+$dotenv = Dotenv::createImmutable(__DIR__ . '/../');
 $dotenv->load();
 
 $container = new Container();
@@ -39,11 +31,12 @@ $container->set(EntityManager::class, fn(Config $config) => EntityManager::creat
     ORMSetup::createAttributeMetadataConfiguration([__DIR__ . '/../src/Model'])
 ));
 
-
 AppFactory::setContainer($container);
 
 $app = AppFactory::create();
+
 $app->addErrorMiddleware(true, true, true);
+
 $app->add(TwigMiddleware::create($app, $twig));
 
 $app->get('/', Controllers\IndexController::class . ':home');
