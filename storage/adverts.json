@@ -4,5 +4,29 @@
         "description": "Батарейка 100%",
         "price": "80000",
         "id": 1
+    },
+    "2": {
+        "id": "2",
+        "title": "Телефон samsung",
+        "description": "good",
+        "price": "85555"
+    },
+    "3": {
+        "title": "Продам Apple 11",
+        "description": "отличная камера",
+        "price": "90000",
+        "id": 3
+    },
+    "4": {
+        "id": "4",
+        "title": "Продам Apple 14",
+        "description": "новый телефон",
+        "price": "555"
+    },
+    "5": {
+        "title": "Продам Apple 10",
+        "description": "камера не работает",
+        "price": "10000",
+        "id": 5
     }
 }
