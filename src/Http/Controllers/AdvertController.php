@@ -7,30 +7,68 @@ use App\Model\Validators\AdvertValidator;
 use Slim\Http\ServerRequest;
 use Slim\Http\Response;
 use Slim\Views\Twig;
-
+use App\Model\Entity\Advert;
+//use Connection\
 class AdvertController
 {
     public function index(ServerRequest $request, Response $response)
     {
-        $advertsRepo = new AdvertRepository();
-        $adverts     = $advertsRepo->getAll();
+        global $mysqli;
+        $results = [];
+        $sql = "SELECT * FROM adverts";
+        $result  = mysqli_query($mysqli, $sql);
+        if ($result) {
+            while( $row = $result->fetch_array())
+            {
+                $results[] = new Advert($row);
+            }
+        } else {
+            echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+        }
+
+
+        $adverts = $results;
 
         $view = Twig::fromRequest($request);
 
         return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
     }
 
-    public function newAdvert(ServerRequest $request, Response $response) {
+    public function newAdvert(ServerRequest $request, Response $response, array $args) {
+        global $mysqli;
         $view = Twig::fromRequest($request);
+        // print_r($view);
+        
+        // $sql = "INSERT INTO adverts(title, description, price) VALUES ('$args[title], '$args[description]', '$args[price]')";
+
+        // $result  = mysqli_query($mysqli, $sql);
+        //     if ($result) {
+     
+        //                     echo "added";
+                   
+        //     } else {
+        //     echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+        //     }
 
         return $view->render($response, 'adverts/new.twig');
     }
 
     public function create(ServerRequest $request, Response $response)
     {
+        global $mysqli;
         $repo        = new AdvertRepository();
         $advertData  = $request->getParsedBodyParam('advert', []);
+        print_r($advertData);
+        $sql = "INSERT INTO adverts(title, description, price) VALUES ('$advertData[title]', '$advertData[description]', '$advertData[price]')";
 
+        $result  = mysqli_query($mysqli, $sql);
+            if ($result) {
+     
+            echo "added";
+                   
+            } else {
+            echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+            }
         $validator = new AdvertValidator();
         $errors    = $validator->validate($advertData);
 
@@ -53,8 +91,31 @@ class AdvertController
     {
         $view = Twig::fromRequest($request);
         $advertId = $args['id'];
-        $repo = new AdvertRepository();
-        $advert = $repo->getAdvertId($advertId);
+        //print_r($advertId);
+        global $mysqli;
+        $res;
+        $sql = "SELECT * FROM adverts WHERE id = '$advertId'";
+        $result  = mysqli_query($mysqli, $sql);
+        if ($result) {
+            while( $row = $result->fetch_array())
+            {
+                if($row['id'] || $row['title'] || $row['description'] || $row['price']){
+                    $res = array(
+                        'id' => $row['id'],
+                        'title' => $row['title'],
+                        'description' => $row['description'],
+                        'price' => $row['price']
+                    );
+            }
+        }
+        } else {
+            echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+        }
+   
+        $advert = new Advert($res);
+
+        //$repo = new AdvertRepository();
+        //$advert = $repo->getAdvertId($advertId);
         return $view->render($response, 'adverts/oneadvert.twig', ['advert' => $advert]);
     }
 
@@ -65,8 +126,20 @@ class AdvertController
 //to edit adverts
     public function advertEdit(ServerRequest $request, Response $response)
     {
+        global $mysqli;
         $repo        = new AdvertRepository();
         $advertData  = $request->getParsedBodyParam('advert', []);
+        print_r($advertData);
+        $sql = "UPDATE adverts SET title = '$advertData[title]', description = '$advertData[description]' , price = '$advertData[price]' WHERE id = $advertData[id]";
+
+        $result  = mysqli_query($mysqli, $sql);
+            if ($result) {
+     
+            echo "added";
+                   
+            } else {
+            echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+            }
 
         $validator = new AdvertValidator();
         $errors    = $validator->validate($advertData);
@@ -88,9 +161,27 @@ class AdvertController
     public function advertEditDisplay(ServerRequest $request, Response $response, array $arrayData)
     {
         $view = Twig::fromRequest($request);
-        $adId = $arrayData['id'];
-        $advertsRepo = new AdvertRepository();
-        $advert = $advertsRepo->getAdvertId($adId);
+        $advertId = $arrayData['id'];
+        global $mysqli;
+        $res;
+        $sql = "SELECT * FROM adverts WHERE id = '$advertId'";
+        $result  = mysqli_query($mysqli, $sql);
+        if ($result) {
+            while( $row = $result->fetch_array())
+            {
+                if($row['id'] || $row['title'] || $row['description'] || $row['price']){
+                    $res = array(
+                        'id' => $row['id'],
+                        'title' => $row['title'],
+                        'description' => $row['description'],
+                        'price' => $row['price']
+                    );
+            }}
+        } else {
+            echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+        }
+   
+        $advert = new Advert($res);
 
 
         return $view->render($response, 'adverts/edit.twig', ['advert' => $advert]);
