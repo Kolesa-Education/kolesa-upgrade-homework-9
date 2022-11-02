@@ -68,11 +68,6 @@ class AdvertRepository
     }
 
     public function create(array $advertData): Advert {
-        $categoryId = $advertData["category"]["id"];
-        unset($advertData["category"]);
-        $advertData["category_id"] = intval($categoryId);
-
-
         $query = "INSERT INTO adverts(title, description, price, category_id) VALUES (:title, :description, :price, :category_id)";
 
         $result_query = $this->connection->prepare($query);
@@ -82,12 +77,15 @@ class AdvertRepository
     }
 
     public function update(int $id, array $advertData) {
-        $db = $this->getDB();
-        $db[$id]   = $advertData;
+        $query = "
+                    UPDATE adverts 
+                    SET title=:title, description=:description, price=:price, category_id=:category_id  
+                    WHERE id=$id
+                ";
+        $result_query = $this->connection->prepare($query);
+        $result_query->execute($advertData);
 
-        $this->saveDB($db);
-
-        return $advertData;
+        return new Advert($advertData);
     }
 
     private function getDB(): array

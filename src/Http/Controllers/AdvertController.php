@@ -70,13 +70,11 @@ class AdvertController
         $categoryData  = $request->getParsedBodyParam('category');
         $categoryDataArr = explode('.', $categoryData);
         $categoryArr = ["id" => $categoryDataArr[0], "name" => $categoryDataArr[1]];
-
-        $advertData['category'] = $categoryArr;
+        
+        $advertData['category_id'] = $categoryArr["id"];
 
         $validator = new AdvertValidator();
         $errors    = $validator->validate($advertData);
-        $keys = array_keys($advertData);
-        $keys = implode(',', $keys);
 
         if (!empty($errors)) {
             $view = Twig::fromRequest($request);
