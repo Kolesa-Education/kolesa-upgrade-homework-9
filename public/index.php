@@ -18,4 +18,5 @@ $app->get('/adverts/new', Controllers\AdvertController::class . ':newAdvert');
 $app->post('/adverts', Controllers\AdvertController::class . ':create');
 $app->get('/adverts/{id}',Controllers\AdvertController::class . ':getAdvert');
 
+
 $app->run();
