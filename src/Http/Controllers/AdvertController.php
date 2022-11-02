@@ -57,14 +57,14 @@ class AdvertController extends Dbh
         $advert      = $advertsRepo->read($advertId);
         $view        = Twig::fromRequest($request);
 
-        return $view->render($response, 'adverts/read.twig', ['adverts' => $advert]);
+        return $view->render($response, 'adverts/read.twig', ['advert' => $advert]);
     }
 
     public function updateAdvert(ServerRequest $request, Response $response, array $args) 
     {
-        $advertsRepo        = new AdvertRepository();
-        $advertId    = $args['id'];
-        $advert      = $advertsRepo->read($advertId);
+        $advertsRepo   = new AdvertRepository();
+        $advertId      = $args['id'];
+        $advert        = $advertsRepo->read($advertId);
         
         $view = Twig::fromRequest($request);
 
@@ -79,8 +79,8 @@ class AdvertController extends Dbh
         $advertData       = $request->getParsedBodyParam('advert', []);
         $advertData['id'] = $advertId;
 
-        $validator = new AdvertValidator();
-        $errors    = $validator->validate($advertData);
+        $validator        = new AdvertValidator();
+        $errors           = $validator->validate($advertData);
 
         if (!empty($errors)) {
             $view = Twig::fromRequest($request);

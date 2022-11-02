@@ -49,7 +49,7 @@ class AdvertRepository extends Dbh
 
     }
 
-    public function update(int $id, array $advertData)
+    public function update(array $advertData)
     {
         $stmt = $this->connect()->prepare('UPDATE adverts SET title = :title, description = :description, price = :price WHERE id = :id;');
 
@@ -60,7 +60,7 @@ class AdvertRepository extends Dbh
         
         $stmt->execute();
 
-        return new Advert($id, $advertData);
+        return new Advert($advertData);
     }
 
     /*

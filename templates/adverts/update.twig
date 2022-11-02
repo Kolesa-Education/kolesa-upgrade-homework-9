@@ -13,11 +13,11 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <form action="/adverts/{{ data.id }}/update" method="patch">
+    <form action="/adverts/{{ adverts.id }}/update" method="post">
         <div>
             <label>
                 Заголовок *
-                <input type="text" name="advert[title]" value="{{ data.title ?? '' }}">
+                <input type="text" name="advert[title]" value="{{ adverts.title ?? '' }}">
                 {% if errors.title %}
                     <div style="color: red">{{ errors.title }}</div>
                 {% endif %}
@@ -27,7 +27,7 @@
         <div>
             <label>
                 Описание *
-                <input type="text" name="advert[description]" value="{{ data.description ?? '' }}">
+                <input type="text" name="advert[description]" value="{{ adverts.description ?? '' }}">
                 {% if errors.description %}
                     <div style="color: red">{{ errors.description }}</div>
                 {% endif %}
@@ -37,7 +37,7 @@
         <div>
             <label>
                 Цена *
-                <input type="number" name="advert[price]" value="{{ data.price ?? 0 }}">
+                <input type="number" name="advert[price]" value="{{ adverts.price ?? 0 }}">
                 {% if errors.price %}
                     <div style="color: red">{{ errors.price }}</div>
                 {% endif %}
