@@ -19,10 +19,13 @@ class AdvertController
         $db = new Db;
         $repo = new Store($db);
         $adverts = $repo->getAll();
+        $categories = $repo->getCategories();
         
         $view = Twig::fromRequest($request);
-
-        return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts, 'editable'=>true]);
+        return $view->render($response, 'adverts/index.twig', [
+            'adverts' => $adverts,
+            'categories'=> $categories, 
+            'editable'=>true]);
 
     }
 
@@ -138,5 +141,23 @@ class AdvertController
         $repo->updateAdvert($id, $advert);
 
         return $response->withRedirect('/adverts');
+    }
+
+    public function search(ServerRequest $request, Response $response){
+        $tag = $request->getQueryParam('searchtag');
+        $tag = trim($tag);
+
+        $db = new Db;
+        $repo = new Store($db);
+
+        $result = $repo->search($tag);
+        if (empty($result)){
+            return  $response->withStatus(404)
+            ->withHeader('Content-Type', 'text/html')
+            ->write('404 Not Found');
+        }
+
+        $view = Twig::fromRequest($request);
+        return $view->render($response, 'adverts/index.twig', ['adverts' => $result,]);
     }
 }

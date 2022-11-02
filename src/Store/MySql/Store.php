@@ -105,4 +105,20 @@ class Store implements AdvertRepository{
 
         return $result;
     }
+
+    public function search(string $tag): array{
+        $adverts = $this->getAll();
+
+        $result = [];
+
+        foreach ($adverts as $advert){
+            if (str_contains($advert->getTitle(), $tag)) {
+                $result[] = $advert;
+            } else if ($advert->getCategory() == $tag) {
+                $result[] = $advert;
+            }       
+        }
+
+        return $result;
+    }
 }

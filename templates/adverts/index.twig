@@ -4,6 +4,31 @@
 <div class="wrapper">
     <h1>Список объявлений</h1>
 
+ {% if editable %}
+ <form action="/adverts/search" method="get">
+      <div class="searchbar">
+        <input
+          list="infolist"
+          type="text"
+          name="searchtag"
+          placeholder="Search"
+          required
+        />
+        <datalist id="infolist" class="list">
+
+          {% for advert in adverts %}
+            <option value="{{ advert.getTitle() }}">{{ advert.getTitle() }} - Title</option>    
+          {% endfor %}
+          
+          {% for category in categories %}
+            <option value="{{ category.ctry_name }}">{{ category.ctry_name }} - Category</option>
+        {% endfor %}
+        </datalist>
+      </div>
+      <button type="submit" class="button1">Search</button>
+    </form>
+    {% endif %}
+
     <table id="adverts">
     <tr>
         <th>ID</th>

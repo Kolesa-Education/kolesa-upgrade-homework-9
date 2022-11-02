@@ -12,6 +12,8 @@ $app  = AppFactory::create();
 $app->addErrorMiddleware(true, true, true);
 $app->add(TwigMiddleware::create($app, $twig));
 
+$app->get('/adverts/search', Controllers\AdvertController::class . ':search');
+
 $app->get('/', Controllers\IndexController::class . ':home');
 $app->get('/adverts', Controllers\AdvertController::class . ':index');
 $app->get('/adverts/{id}', Controllers\AdvertController::class . ':getById');
