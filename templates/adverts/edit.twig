@@ -1,7 +1,7 @@
 {% extends "base.twig" %}
 
 {% block body %}
-    <h1>Подать новое объявление</h1>
+    <h1>Редактирование объявлений</h1>
 
     {% if errors is not empty %}
         <div style="color: red">При сохранении произошла ошибка</div>
@@ -13,7 +13,7 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <form action="/adverts" method="post">
+    <form action="/adverts/{{data.id}}/edit" method="post">
         <div>
             <label>
                 Заголовок *
@@ -44,20 +44,18 @@
             </label>
         </div>
         <br>
-        <div>
+         <div>
             <label>
-                Категория *
+                Категория*
                 <select name="advert[ctry_name]">
+                     <option value="{{data.category}}" selected>{{data.category}}</option>
                 {% for category in categories %}
-                    <option value="{{category.ctry_name}}">{{category.ctry_name}}</option>
+                    <option value="{{category.ctry_name}}">{{category.ctry_name}}</option>                    
                 {% endfor %}
                 </select>
-                {% if errors.price %}
-                    <div style="color: red">{{ errors.price }}</div>
-                {% endif %}
             </label>
         </div>
         <br>
-        <input type="submit" value="Create">
+        <input type="submit" value="Update">
     </form>
 {% endblock %}

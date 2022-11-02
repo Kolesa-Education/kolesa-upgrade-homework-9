@@ -62,6 +62,12 @@ class AdvertValidator implements ValidatorInterface
     {
         $price = $data['price'] ?? 0;
 
+        if (!is_numeric($price)){
+            return[
+                'price' => 'Цена должна быть числовой'
+            ];
+        }
+
         if ($price < self::MIN_PRICE) {
             return [
                 'price' => 'Цена не может быть меньше ' . self::MIN_PRICE,

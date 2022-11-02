@@ -1,11 +1,45 @@
 {% extends "base.twig" %}
 
 {% block body %}
+<div class="wrapper">
     <h1>Список объявлений</h1>
 
-    <ul>
-        {% for advert in adverts %}
-            <li>{{ advert.getTitle() }}</li>
-        {% endfor %}
-    </ul>
+    <table id="adverts">
+    <tr>
+        <th>ID</th>
+        <th>Заголовок</th>
+        <th>Описание</th>
+        <th>Цена</th>
+        <th>Категория</th>
+        {% if editable %}
+        <th>Действие</th>
+        {% endif %}
+    </tr>
+
+    {% for advert in adverts %}
+    <tr>
+        <td>{{ advert.getID() }}</td>
+        <td>{{ advert.getTitle() }}</td>
+        <td>{{ advert.getDescription() }}</td>
+        <td>{{ advert.getPrice() }}</td>
+        <td>{{ advert.getCategory() }}</td>
+        {% if editable %}
+        <td>
+            <a href="adverts/{{ advert.getID() }}". class="mr-3" title="View Record" data-toggle="tooltip"><span class="fa fa-eye"></span></a>
+            <a href="adverts/{{ advert.getID() }}/edit" class="mr-3" title="Update Record" data-toggle="tooltip"><span class="fa fa-pencil"></span></a>
+        </td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+    </table>
+    </br>
+    <div>
+        <form action="/adverts/new/form" method="get" id="form1">
+            <input type="submit" value="new advert form" />
+        </form>
+
+        
+    </div>
+
+</div>
 {% endblock %}

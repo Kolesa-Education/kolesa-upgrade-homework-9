@@ -4,5 +4,17 @@
         "description": "Батарейка 100%",
         "price": "80000",
         "id": 1
+    },
+    "2": {
+        "title": "Квартира ЖК",
+        "description": "2 комнатная",
+        "price": "50000",
+        "id": 2
+    },
+    "3": {
+        "title": "Монитор Samsung",
+        "description": "24,5 дюйм",
+        "price": "80000",
+        "id": 3
     }
 }
