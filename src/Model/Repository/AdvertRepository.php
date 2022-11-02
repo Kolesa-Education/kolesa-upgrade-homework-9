@@ -19,11 +19,30 @@ class AdvertRepository
         return $result;
     }
 
+    public function getAdvert($id)
+    {
+        $db = $this->getDB();
+        $result = [];
+        $result[] = new Advert($db[$id]);
+        // print_r($result[0]);
+
+        return $result[0];
+    }
+
     public function create(array $advertData): Advert {
         $db               = $this->getDB();
         $increment        = array_key_last($db) + 1;
         $advertData['id'] = $increment;
         $db[$increment]   = $advertData;
+
+        $this->saveDB($db);
+
+        return new Advert($advertData);
+    }
+
+    public function edit(array $advertData): Advert {
+        $db               = $this->getDB();
+        $db[$advertData['id']]   = $advertData;
 
         $this->saveDB($db);
 
