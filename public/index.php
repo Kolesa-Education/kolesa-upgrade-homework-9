@@ -18,3 +18,6 @@ $app->get('/adverts/new', Controllers\AdvertController::class . ':newAdvert');
 $app->post('/adverts', Controllers\AdvertController::class . ':create');
 
 $app->run();
+
+
+
