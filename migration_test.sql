@@ -1,3 +1,6 @@
+CREATE DATABASE ad_kolesa;
+
+
 USE ad_kolesa;
 
 

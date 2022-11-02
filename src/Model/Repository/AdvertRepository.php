@@ -51,7 +51,7 @@ class AdvertRepository
     public function getById(int $id){
         $advertOutput = $this->getConnection()->query("SELECT * FROM adverts WHERE id=$id;")->fetchAll(PDO::FETCH_ASSOC);
         
-        if($advertOutput === false){
+        if(count($advertOutput) === 0){
             return null;
         }
         $advertOutput = $advertOutput[0];
@@ -92,11 +92,6 @@ class AdvertRepository
     {
         $adverts = $this->getConnection()->query("SELECT * FROM adverts");
         return $adverts->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    private function saveDB(array $data):void
-    {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
     }
 
     public function getConnection(): PDO

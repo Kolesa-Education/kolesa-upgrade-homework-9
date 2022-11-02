@@ -42,7 +42,7 @@ class CategoryRepository
     public function getById(int $id)
     {
         $categoryOutput = $this->getConnection()->query("SELECT * FROM categories WHERE id=$id")->fetchAll(PDO::FETCH_ASSOC);
-        if($categoryOutput === false){
+        if(count($categoryOutput) === 0){
             return null;
         }
         $categoryOutput = $categoryOutput[0];
