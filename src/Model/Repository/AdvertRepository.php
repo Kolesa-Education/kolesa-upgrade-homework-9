@@ -8,30 +8,12 @@ use PDO;
 $connection = new PDO("mysql:host=localhost;dbname=adverts_db","root","zhanarys");
 class AdvertRepository
 {
-    private const DB_PATH = '../storage/adverts.json';
-
-    /*
-     * OLD METHOD
-    public function getAll()
-    {
-        $result = [];
-
-        foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
-        }
-
-        return $result;
-    }
-    */
-
     private function connectDB(): PDO
     {
         $connection = new PDO("mysql:host=localhost;dbname=adverts_db","root","zhanarys");
         return $connection;
     }
 
-
-    //METHOD FOR MYSQL
     public function getAll(){
         $pdo = $this->connectDB();
         $query = "SELECT * FROM adverts";
@@ -46,20 +28,6 @@ class AdvertRepository
         return $result;
     }
 
-    /*
-     * OLD METHOD
-    public function getById(int $id): ?Advert{
-        $adverts = $this->getDB();
-        for ($i=0; $i<=count($adverts); $i++){
-            if ($adverts[$i]['id'] == $id){
-                return new Advert($adverts[$i]);
-            }
-        }
-        return null;
-    }
-    */
-
-    //METHOD FOR MYSQL
     public function getById(int $id){
         $pdo = $this->connectDB();
         $query = "SELECT id, title, description, price FROM adverts WHERE id = ?";
@@ -71,7 +39,6 @@ class AdvertRepository
         return new Advert($data);
     }
 
-    //METHOD FOR MYSQL
     public function getViewId($id){
 
         $pdo = $this->connectDB();
@@ -85,9 +52,64 @@ class AdvertRepository
         return $result;
     }
 
+    public function update(array $advertData){
+        $pdo = $this->connectDB();
 
+        $id = $advertData['id'];
+        $title = $advertData['title'];
+        $description = $advertData['description'];
+        $price = $advertData['price'];
+
+        $stmt = $pdo->prepare('UPDATE adverts
+        SET title =?, description = ?, price = ? 
+        WHERE id = ?');
+        $stmt->execute(array($title, $description, $price, $id));
+    }
+
+    public function insert(array $advertData): Advert{
+        $pdo = $this->connectDB();
+        $advertData['id'] = $advertData['id']++;
+        $title = $advertData['title'];
+        $description = $advertData['description'];
+        $price = $advertData['price'];
+
+        $stmt = $pdo->prepare("INSERT INTO adverts(title,description,price) 
+        VALUES (?,?,?)");
+        $stmt->execute(array($title,$description,$price));
+
+        return new Advert($advertData);
+    }
+
+    //private const DB_PATH = '../storage/adverts.json';
     /*
+     *
+     *  OLD METHODS
+     *
+     *
+     *
+    public function getAll()
+    {
+        $result = [];
+
+        foreach ($this->getDB() as $advertData) {
+            $result[] = new Advert($advertData);
+        }
+
+        return $result;
+    }
+
      * OLD METHOD
+    public function getById(int $id): ?Advert{
+        $adverts = $this->getDB();
+        for ($i=0; $i<=count($adverts); $i++){
+            if ($adverts[$i]['id'] == $id){
+                return new Advert($adverts[$i]);
+            }
+        }
+        return null;
+    }
+
+     OLD METHOD
     public function getViewId($id)
     {
         $result = [];
@@ -101,7 +123,9 @@ class AdvertRepository
 
         return $result;
     }
-    */
+
+
+
 
     public function edit(array $advertData): Advert {
         $db = $this->getDB();
@@ -132,4 +156,5 @@ class AdvertRepository
     {
         file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
     }
+    */
 }

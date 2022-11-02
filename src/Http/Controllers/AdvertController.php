@@ -60,7 +60,7 @@ class AdvertController
             ]);
         }
 
-        $repo->edit($advertData);
+        $repo->update($advertData);
 
         return $response->withRedirect('/adverts');
     }
@@ -82,7 +82,7 @@ class AdvertController
             ]);
         }
 
-        $repo->create($advertData);
+        $repo->insert($advertData);
 
         return $response->withRedirect('/adverts');
     }
