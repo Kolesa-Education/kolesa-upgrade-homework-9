@@ -9,25 +9,8 @@ use PDOException;
 
 use App\Model\Repository\CategoryRepository;
 
-class AdvertRepository
+class AdvertRepository extends AbstractRepository
 {
-    private const CONFIG_PATH = '../src/Model/Repository/db_config.json';
-    private PDO $connection;
-
-    public function __construct()
-    {
-        $config = json_decode(file_get_contents(self::CONFIG_PATH), true) ?? [];
-        
-        $dns = 'mysql:host='.$config["host"].';dbname='.$config["dbName"];
-        try{
-            $dbConnection = new PDO($dns, $config["username"], $config["password"]);
-        }catch(PDOException $e){
-            return null;
-        }
-        
-        
-        $this->setConnection($dbConnection);
-    }
 
 
     public function getAll()
@@ -88,28 +71,9 @@ class AdvertRepository
         return new Advert($advertData);
     }
 
-    private function getDB(): array
+    protected function getDB(): array
     {
         $adverts = $this->getConnection()->query("SELECT * FROM adverts");
         return $adverts->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getConnection(): PDO
-    {
-        return $this->connection;
-    }
-
-    /**
-     * Set the value of connection
-     *
-     * @param PDO $connection
-     *
-     * @return self
-     */
-    public function setConnection(PDO $connection): self
-    {
-        $this->connection = $connection;
-
-        return $this;
     }
 }

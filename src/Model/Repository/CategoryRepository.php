@@ -6,27 +6,9 @@ use App\Model\Entity\Category;
 use PDO;
 use PDOException;
 
-use function PHPSTORM_META\type;
 
-class CategoryRepository
+class CategoryRepository extends AbstractRepository
 {
-    private const CONFIG_PATH = '../src/Model/Repository/db_config.json';
-    private PDO $connection;
-
-    public function __construct()
-    {
-        $config = json_decode(file_get_contents(self::CONFIG_PATH), true) ?? [];
-        
-        $dns = 'mysql:host='.$config["host"].';dbname='.$config["dbName"];
-        try{
-            $dbConnection = new PDO($dns, $config["username"], $config["password"]);
-        }catch(PDOException $e){
-            return null;
-        }
-        
-        
-        $this->setConnection($dbConnection);
-    }
 
     public function getAll()
     {
@@ -50,33 +32,9 @@ class CategoryRepository
         return $categoryObject;
     }
 
-    private function getDB(): array
+    protected function getDB(): array
     {
         $categories = $this->getConnection()->query("SELECT * FROM categories");
         return $categories->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Get the value of connection
-     *
-     * @return PDO
-     */
-    public function getConnection(): PDO
-    {
-        return $this->connection;
-    }
-
-    /**
-     * Set the value of connection
-     *
-     * @param PDO $connection
-     *
-     * @return self
-     */
-    public function setConnection(PDO $connection): self
-    {
-        $this->connection = $connection;
-
-        return $this;
     }
 }
