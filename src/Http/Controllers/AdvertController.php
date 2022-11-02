@@ -49,9 +49,6 @@ class AdvertController
     public function getItem(ServerRequest $request, Response $response): ResponseInterface
     {
         $advert = $this->repo->find($request->getAttribute('id'));
-        if ($advert === null) {
-            die(404);
-        }
         return Twig::fromRequest($request)->render($response, 'adverts/item.twig', ['advert' => $advert]);
     }
 

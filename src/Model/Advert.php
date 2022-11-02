@@ -17,13 +17,13 @@ class Advert
     #[Column, GeneratedValue]
     private ?int $id;
 
-    #[Column(type: Types::STRING)]
+    #[Column(name: 'title',type: Types::STRING)]
     private ?string $title;
 
-    #[Column(type: Types::STRING)]
+    #[Column(name: 'description',type: Types::STRING)]
     private ?string $description;
 
-    #[Column(type: Types::INTEGER)]
+    #[Column(name: 'price',type: Types::INTEGER)]
     private ?int $price;
 
     public function __construct($data = [])

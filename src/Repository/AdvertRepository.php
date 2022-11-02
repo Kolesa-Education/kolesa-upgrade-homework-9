@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Model\Advert;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Query;
 
 class AdvertRepository implements InterfaceAdvertRepository
 {
@@ -16,8 +17,7 @@ class AdvertRepository implements InterfaceAdvertRepository
         return $this->em->createQueryBuilder()
             ->select('a')
             ->from(Advert::class, 'a')
-            ->getQuery()
-            ->getArrayResult();
+            ->getQuery()->getResult();
 
 
 
@@ -28,15 +28,16 @@ class AdvertRepository implements InterfaceAdvertRepository
 //            ->getArrayResult();
     }
 
-    public function find(int $id): array
+    public function find(int $id): Advert
     {
-        return $this->em->createQueryBuilder()
+        $query = $this->em->createQueryBuilder()
             ->select('a')
             ->from(Advert::class, 'a')
             ->where('a.id = :id')
             ->setParameter('id',$id)
-            ->getQuery()
-            ->getArrayResult();
+            ->getQuery()->getResult();
+
+        return new Advert($query);
     }
 
     /**
