@@ -1,6 +1,11 @@
 <?php
 
 require_once __DIR__ . '/../vendor/autoload.php';
+// get Database connection
+require_once('../src/Connection/sql.php');
+
+
+
 
 use App\Http\Controllers;
 use Slim\Factory\AppFactory;
@@ -25,9 +30,3 @@ $app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':advertE
 
 $app->run();
 
-
-// look into security threats of sql ad format table accordinbgly 
-
-//Connect php code to sql
-//comment current funtions and replace with sql counterparts 
-// create a autoated script for the tester to setup the sql database 
