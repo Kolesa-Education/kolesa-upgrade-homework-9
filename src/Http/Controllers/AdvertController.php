@@ -51,7 +51,12 @@ class AdvertController
 
     public function getAdvertById(ServerRequest $request, Response $response,array $args){
         $view = Twig::fromRequest($request);
-        $id= $args['id'] ?? '-1';
+        $id= $args['id'] ?? null;
+        if($id == null){
+            return $response->withRedirect('/adverts');
+        }
+        
+
         $repo = new AdvertRepository();
         $advert = $repo->getAdvert($id);
 

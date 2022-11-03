@@ -28,8 +28,10 @@ class AdvertValidator implements ValidatorInterface
     private function validateCategory(array $data) :array{
 
         $category = $data['category'];
+        $caties = array('Электроника', 'Мебель', 'Транспорт', 'Недвижимость');
 
-        if ($category != 'Электроника' && $category!='Мебель' && $category!='Транспорт' && $category != 'Недвижимость') {
+
+        if (!in_array($category, $caties)) {
             return [
                 'title' => 'Категория должна быть одной из четырех доступных: Электроника, Мебель, Транспорт, Недвижимость'
             ];

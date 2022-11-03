@@ -9,23 +9,22 @@ use PDO;
 
 class AdvertRepository
 {
-    //private const DB_PATH = '../storage/adverts.json';
+    private static PDO $pdo;
 
-
-    
-
-
+    public function __construct()
+    {
+        $host = 'localhost';
+        $db   = 'ShopDB';
+        $user = 'root';
+        $pass = '123456';
+        $charset = 'utf8';
+        $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+        $opt = [ PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,PDO::ATTR_EMULATE_PREPARES => false];
+        self::$pdo = new PDO($dsn, $user, $pass, $opt);
+    }
 
     public function getAll()
     {
-        /*
-        $result = [];
-
-        foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
-        }
-
-        return $result;*/
 
         $db = $this->getDB();
         $stmt = $db->query('SELECT * FROM Adverts');
@@ -39,14 +38,6 @@ class AdvertRepository
     }
 
     public function create(array $advertData): Advert {
-        /*$db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
-        $advertData['id'] = $increment;
-        $db[$increment]   = $advertData;
-
-        $this->saveDB($db);
-
-        return new Advert($advertData);*/
 
         $title = $advertData['title'];
         $description= $advertData['description'];
@@ -64,20 +55,7 @@ class AdvertRepository
 
     private function getDB(): array
     {
-        //return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
-
-
-        $host = 'localhost';
-        $db   = 'ShopDB';
-        $user = 'root';
-        $pass = '123456';
-        $charset = 'utf8';
-        $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
-        $opt = [ PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,PDO::ATTR_EMULATE_PREPARES => false];
-        $pdo = new PDO($dsn, $user, $pass, $opt);
-        return $pdo;
-        
-
+        return self::$pdo;
     }
 
     public function getAdvert($id) : Advert {
@@ -88,26 +66,13 @@ class AdvertRepository
                 return $el;
             }
         }
-        return new Advert();
-
-
-
-
-        
-
-
+        throw new Exception('No Advert');
 
     }
 
 
     public function setAdvert(array $advertData){
-        /*
-        $db    = $this->getDB();;
-        $db[$advertData['id']]   = $advertData;
 
-        $this->saveDB($db);
-
-        return new Advert($advertData);*/
 
         $title = $advertData['title'];
         $description= $advertData['description'];
@@ -121,24 +86,6 @@ class AdvertRepository
         WHERE id = ?');
         $stmt->execute(array($title, $description, $price, $category ,$id));
     
-
-
-
-
-
-
     }
-
-
-
-    /*
-    private function saveDB(array $data):void
-    {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
-    }*/
-
-
-
-
 
 }
