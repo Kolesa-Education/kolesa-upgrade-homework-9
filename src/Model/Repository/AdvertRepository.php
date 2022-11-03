@@ -5,69 +5,97 @@ namespace App\Model\Repository;
 use App\Model\Entity\Advert;
 use PDO;
 
+
+$connection = new PDO("mysql: host = localhost; dbname = advertDB", "asik", "Aru_010607");
 class AdvertRepository {
-    private const DB_PATH = '../storage/adverts.json';
+    private function connectionDB(): PDO {
+        $connection = new PDO("mysql: host = localhost; dbname = advertDB", "asik", "Aru_010607");
+        return $connection;
+    }
 
     public function getAll() {
         $result = [];
-        foreach ($this->getDB() as $advertData) {
+        $pdo = $this->connectionDB();
+        $query = "SELECT * FROM advertDB.adverts";
+        $data = $pdo->query($query)->fetchAll();
+
+        foreach ($data as $advertData) {
             $result[] = new Advert($advertData);
         }
+        return $result;
+    }
+
+    public function getById(int $id){
+        $pdo = $this->connectionDB();
+        $query = "SELECT id, title, description, price FROM advertDB.adverts WHERE id = ?";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute(array($id));
+
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return new Advert($data);
+    }
+
+    public function getId($id){
+
+        $pdo = $this->connectionDB();
+        $query = "SELECT id, title, description, price FROM advertDB.adverts WHERE id = ?";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute(array($id));
+
+        $data = $stmt->fetch(PDO::FETCH_ASSOC);
+        $result[] = new Advert($data);
 
         return $result;
     }
 
-    public function create(array $advertData): Advert {
-        $db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
-        $advertData['id'] = $increment;
-        $db[$increment]   = $advertData;
+    public function edit(array $advertData){
+        $pdo = $this->connectionDB();
 
-        $this->saveDB($db);
+        $id = $advertData['id'];
+        $title = $advertData['title'];
+        $description = $advertData['description'];
+        $price = $advertData['price'];
+
+        $stmt = $pdo->prepare('UPDATE advertDB.adverts
+        SET title =?, description = ?, price = ? 
+        WHERE id = ?');
+        $stmt->execute(array($title, $description, $price, $id));
+    }
+
+    public function create(array $advertData): Advert{
+        $pdo = $this->connectionDB();
+        $advertData['id'] = $advertData['id']++;
+        $title = $advertData['title'];
+        $description = $advertData['description'];
+        $price = $advertData['price'];
+
+        $stmt = $pdo->prepare("INSERT INTO advertDB.adverts(title,description,price) 
+        VALUES (?,?,?)");
+        $stmt->execute(array($title,$description,$price));
 
         return new Advert($advertData);
     }
-    private function getDB(): array
-    {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
-    }
 
-    private function saveDB(array $data):void
-    {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
-    }
+    // private const DB_PATH = '../storage/adverts.json';
+    // public function deleteAdvert(array $advertData,$id): Advert {
+    //     $pdo = $this->connectionDB();
+    //     $db = $this->getDB();
+    //     unset($advertData);
+    //     $db[$id]   = $advertData;
+    //     $this->saveDB($db);
 
-    public function getById(int $id): Advert {
-        $arr = $this->getDB();
-        for($i = 1; $i<=count($arr); $i++){
-            if ($arr[$i] == null){
-                continue;
-            }
-            if($arr[$i]['id'] == $id){
-                $advertData = $arr[$i];
+    //     return new Advert($advertData);
 
-                return new Advert($advertData);
-            }
-        }
-    }
+    // }
 
-    public function edit (array $advertData,$id): Advert {
-        $db = $this->getDB();
-        $advertData['id'] = $id;
-        $db[$id]   = $advertData;
-        $this->saveDB($db);
+    // private function saveDB(array $data):void
+    // {
+    //     file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+    // }
 
-        return new Advert($advertData);
-
-    }
-
-    public function deleteAdvert(array $advertData,$id): Advert {
-        $db = $this->getDB();
-        unset($advertData);
-        $db[$id]   = $advertData;
-        $this->saveDB($db);
-
-        return new Advert($advertData);
-
-    }
+    // private function getDB(): array
+    // {
+    //     return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+    // }
 }
