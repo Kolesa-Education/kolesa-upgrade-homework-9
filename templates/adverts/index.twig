@@ -1,11 +1,33 @@
 {% extends "base.twig" %}
 
 {% block body %}
-    <h1>Список объявлений</h1>
-
-    <ul>
+    <header>
+        <h2>Список объявлений</h2>
+    </header>
+    <table>
+        <tr>
+            <th>Категория</th>
+            <th>Заголовок</th>
+            <th>Текст обьявления</th>
+            <th>Цена</th>
+        </tr>
         {% for advert in adverts %}
-            <li>{{ advert.getTitle() }}</li>
+            <tr>
+                <td>{{ advert.getCategory() }}</td>
+                <td><a href="http://localhost:8000/adverts/{{advert.getId}}">{{ advert.getTitle() }}</a></td>
+                <td>{{ advert.getDescription() }}</td>
+                <td>{{ advert.getPrice() }}</td>
+            </tr>
         {% endfor %}
-    </ul>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><a href="http://localhost:8000/adverts/new">Создать</a></td>
+            <td></td>
+        </tr>
+    </table>
 {% endblock %}
