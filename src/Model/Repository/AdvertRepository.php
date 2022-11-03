@@ -1,21 +1,36 @@
 <?php
 
 namespace App\Model\Repository;
-
 use App\Model\Entity\Advert;
+use PDO;
+use App\Model\Repository\dbconnection;
+use App\index;
+
 
 class AdvertRepository
 {
-    private const DB_PATH = '../storage/adverts.json';
-
+    // private const DB_PATH = '../storage/adverts.json';
+    
     public function getAll()
     {
         $result = [];
-
-        foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
+        $data = conect()->query('SELECT * FROM adverts');
+        foreach($data as $rows) {
+            array_push($result, $rows);
+            //var_dump($result);
         }
+        return $result;
+    }
 
+    public function getId(int $id){
+        $result = [];
+        $data = conect()->query('SELECT * FROM adverts');
+        foreach ($data as $advert) {
+            if ($advert['id'] == $id) {
+                array_push($result, $advert);
+                // var_dump($result);
+            }
+        }
         return $result;
     }
 
@@ -30,13 +45,13 @@ class AdvertRepository
         return new Advert($advertData);
     }
 
-    private function getDB(): array
-    {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
-    }
+    // private function getDB(): array
+    // {
+    //     return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+    // }
 
-    private function saveDB(array $data):void
-    {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
-    }
+    // private function saveDB(array $data):void
+    // {
+    //     file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+    // }
 }
