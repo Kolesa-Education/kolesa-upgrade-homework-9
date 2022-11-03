@@ -1,8 +1,20 @@
 {
     "1": {
-        "title": "Продам iPhone 8",
-        "description": "Батарейка 100%",
-        "price": "80000",
+        "title": "shit 19123",
+        "description": "Stinks and something else ",
+        "price": "500",
         "id": 1
+    },
+    "2": {
+        "id": "2",
+        "title": "iPhone 19213123123123",
+        "description": "Costly and prestigious",
+        "price": "75200"
+    },
+    "3": {
+        "id": 3,
+        "title": "shit 19124",
+        "description": "Stinks and something elseqqqqq",
+        "price": "1500"
     }
 }

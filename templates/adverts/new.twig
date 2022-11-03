@@ -24,6 +24,41 @@
             </label>
         </div>
         <br>
+
+        <div>
+            <label>
+                Категория *
+                <select name="advert[category]" required> 
+                    <option value="Электроника" selected >
+                        Электроника
+                    </option>
+
+                    <option value="Транспорт">
+                        Транспорт
+                    </option>
+
+                   <option value="Мебель">
+                        Мебель
+                    </option>
+
+                   <option value="Недвижимость">
+                        Недвижимость
+                    </option>
+                </select>
+
+
+                {% if errors.category %}
+                    <div style="color: red">{{ errors.category }}</div>
+                {% endif %}
+            </label>
+        </div>
+        <br>
+
+
+
+
+
+
         <div>
             <label>
                 Описание *

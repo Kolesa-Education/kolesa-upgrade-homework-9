@@ -4,7 +4,7 @@ namespace App\Model\Validators;
 
 class AdvertValidator implements ValidatorInterface
 {
-    private const NOT_EMPTY_FIELDS = ['title', 'description'];
+    private const NOT_EMPTY_FIELDS = ['title', 'description','category'];
     private const MIN_TITLE_LENGTH = 10;
     private const MAX_TITLE_LENGTH = 80;
     private const MIN_PRICE = 0;
@@ -20,8 +20,25 @@ class AdvertValidator implements ValidatorInterface
 
         return array_merge(
             $this->validateLength($data),
-            $this->validatePrice($data)
+            $this->validatePrice($data),
+            $this->validateCategory($data)
         );
+    }
+
+    private function validateCategory(array $data) :array{
+
+        $category = $data['category'];
+        $caties = array('Электроника', 'Мебель', 'Транспорт', 'Недвижимость');
+
+
+        if (!in_array($category, $caties)) {
+            return [
+                'title' => 'Категория должна быть одной из четырех доступных: Электроника, Мебель, Транспорт, Недвижимость'
+            ];
+        }
+
+        return [];
+
     }
 
     private function validateNotEmpty(array $data): array

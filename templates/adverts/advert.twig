@@ -1,0 +1,13 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    <h1>Объявление No.{{advert.getId()}}</h1>
+
+    <h3>{{ advert.getTitle() }}</h3>
+    <h3>{{ advert.getDescription() }}</h3>
+    <h3>{{ advert.getPrice() }} тенге</h3>
+    <h3>{{ advert.getCategory() }} тенге</h3>
+
+
+
+{% endblock %}
