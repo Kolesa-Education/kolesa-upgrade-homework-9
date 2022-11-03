@@ -1,7 +1,7 @@
 {% extends "base.twig" %}
 
 {% block body %}
-    <h1>Подать новое объявление</h1>
+    <h1>Обнавить объявление {{ advert.getId() ?? data.id}}</h1>
 
     {% if errors is not empty %}
         <div style="color: red">При сохранении произошла ошибка</div>
@@ -13,11 +13,12 @@
             {% endfor %}
         </ul>
     {% endif %}
-    <form action="/adverts" method="post">
+    <form action="/adverts/update/{{ advert.getId() }}" method="POST">
+        <input type="hidden" name="advert[id]" value="{{advert.getId() ?? data.id}}">
         <div>
             <label>
                 Заголовок *
-                <input type="text" name="advert[title]" value="{{ data.title ?? '' }}">
+                <input type="text" name="advert[title]" value="{{advert.getTitle() ?? data.title}}">
                 {% if errors.title %}
                     <div style="color: red">{{ errors.title }}</div>
                 {% endif %}
@@ -25,21 +26,9 @@
         </div>
         <br>
         <div>
-            <label for="">
-                Категорий *
-                <select name="categories" id="">
-                    {% for category in categories %}
-                        <option value="{{ category.getId }}">{{category.getCategoryName}}</option>
-                    {% endfor %}
-                </select>
-                
-            </label>
-        </div>
-        <br>
-        <div>
             <label>
                 Описание *
-                <input type="text" name="advert[description]" value="{{ data.description ?? '' }}">
+                <input type="text" name="advert[description]" value="{{advert.getDescription() ?? data.description}}">
                 {% if errors.description %}
                     <div style="color: red">{{ errors.description }}</div>
                 {% endif %}
@@ -49,13 +38,14 @@
         <div>
             <label>
                 Цена *
-                <input type="number" name="advert[price]" value="{{ data.price ?? 0 }}">
+                <input type="number" name="advert[price]" value="{{advert.getPrice ?? data.price}}">
                 {% if errors.price %}
                     <div style="color: red">{{ errors.price }}</div>
                 {% endif %}
             </label>
         </div>
         <br>
-        <input type="submit" value="Create">
+        <button> <a href="http://localhost:8000/adverts/{{ advert.getId() ?? data.id }}">Отенить</a> </button>
+        <button type="submit" value="Сохранить">Сохранить </button>
     </form>
 {% endblock %}
