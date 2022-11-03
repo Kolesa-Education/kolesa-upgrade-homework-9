@@ -1,0 +1,11 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    {% if advert.getTitle == "" %}
+        <h1>Объявление не найдено</h1>
+    {% else %}
+        <h1>{{ advert.getTitle() }}</h1>
+        <p> Описание: {{ advert.getDescription() }}</p>
+        <p> Цена: {{ advert.getPrice() }}</p>
+    {% endif %}
+{% endblock %}
