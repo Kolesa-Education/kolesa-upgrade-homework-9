@@ -13,4 +13,5 @@ class IndexController
 
         return $view->render($response, 'home.twig', ['name' => 'guest']);
     }
+
 }
