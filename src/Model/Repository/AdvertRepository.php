@@ -3,40 +3,94 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Advert;
+use App\Model\Entity\DB;
+use PDO;
+use PDOException;
 
 class AdvertRepository
 {
-    private const DB_PATH = '../storage/adverts.json';
+    private $table_name = 'adverts';
+
+    // TODO: нужно нормально в db засунуть, а то ужас какой-то одно и тоже 500 раз писать
 
     public function getAll()
     {
-        $result = [];
+        try {
+            $sql = "SELECT * FROM `". $this->table_name ."`";
 
-        foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
+            $db = new DB();
+
+            $results = $db->makeQueryForAll($sql);
+
+            $db = null;
+
+            $adverts = array();
+
+            foreach($results as $result){
+                $advert = new Advert($result);
+                array_push($adverts, $advert);
+            }
+
+            return $adverts;
+        } catch (PDOException $e){
+            throw new PDOException($e->getMessage());
         }
+    }
 
-        return $result;
+    public function getById(int $id)
+    {
+        try {
+            $sql = "SELECT * FROM `". $this->table_name ."` WHERE id = " . $id;
+
+            $db = new DB();
+
+            $result = $db->makeQuery($sql);
+
+            $db = null;
+            
+            $advert = new Advert($result);
+
+            return $advert;
+        } catch (PDOException $e){
+            throw new PDOException($e->getMessage());
+        }
     }
 
     public function create(array $advertData): Advert {
-        $db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
-        $advertData['id'] = $increment;
-        $db[$increment]   = $advertData;
+        try {
+            $sql = "INSERT INTO `". $this->table_name ."`(title, description, price) VALUES (:title, :description, :price)";
 
-        $this->saveDB($db);
+            $db = new DB();
 
-        return new Advert($advertData);
+            $db->makeExecution($sql, $advertData);
+
+            $db = null;
+            
+            $advert = new Advert($advertData);
+
+            return $advert;
+        } catch (PDOException $e){
+            throw new PDOException($e->getMessage());
+        }
     }
 
-    private function getDB(): array
-    {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
-    }
+    public function update(array $advertData): Bool {
+        try {
+            $sql = "UPDATE `". $this->table_name ."` SET title=:title, description=:description, price=:price WHERE id=:id";
 
-    private function saveDB(array $data):void
-    {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+            $db = new DB();
+
+            $result = $db->makeExecution($sql, $advertData);
+
+            $db = null;
+
+            if(!$result){
+                return false;
+            }
+            
+            return true;
+        } catch (PDOException $e){
+            throw new PDOException($e->getMessage());
+        }
     }
 }

@@ -1,0 +1,16 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    {% if errors is not empty %}
+        <p style = "color: red;">{{ errors['message'] }}</p>
+    {% endif %}
+
+    <h1>{{ advert.getTitle() }}</h1>
+
+    <h3>{{ advert.getPrice() }} тенге</h3>
+    
+    <p>{{ advert.getDescription() }}</p>
+
+    <p><a href="/adverts/{{advert.getId()}}/edit">Edit</a></p>
+
+{% endblock %}

@@ -3,9 +3,14 @@
 {% block body %}
     <h1>Список объявлений</h1>
 
+    {% if errors is not empty %}
+        <p style = "color: red;">{{ errors['message'] }}</p>
+    {% endif %}
     <ul>
         {% for advert in adverts %}
-            <li>{{ advert.getTitle() }}</li>
+            <li><a href = "/adverts/{{ advert.getId() }}">{{ advert.getTitle() }}</li>
         {% endfor %}
     </ul>
+
+    <p><a href="/adverts/new">Новое объявление</a></p>
 {% endblock %}
