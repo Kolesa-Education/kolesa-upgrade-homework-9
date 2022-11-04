@@ -26,37 +26,3 @@ $app->get('/adverts/{id}/edit', Controllers\AdvertModificationController::class 
 $app->post('/adverts/{id}/edit', Controllers\AdvertModificationController::class . ':modify');
 
 $app->run();
-
-// $container = $app->getContainer();
-
-// $host = '127.0.0.1';
-// $db   = 'adverts';
-// $user = 'root';
-// $port = "3307";
-// $pass = 'Miracle.1208';
-// $charset = 'utf8mb4';
-
-// $options = [
-//     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-//     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-//     PDO::ATTR_EMULATE_PREPARES   => false,
-// ];
-// $dsn = "mysql:host=$host;dbname=$db;charset=$charset;port=$port";
-// // try {
-// //      $pdo = new \PDO($dsn, $user, $pass, $options);
-// // } catch (\PDOException $e) {
-// //      throw new \PDOException($e->getMessage(), (int)$e->getCode());
-// // }
-
-// $container->set('db', function ($c) {
-//     $pdo = new \PDO($dsn, $user, $pass, $options);
-//     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-//     return $pdo;
-// });
-  
-// $pdo = $app->getContainer();
-// $pdo = $pdo->get('db');
-// $stmt = $pdo->query('SELECT * FROM adverts');
-
-// echo $stmt;
