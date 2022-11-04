@@ -48,8 +48,8 @@ class AdvertRepository
 
     private function getDB(): array
     {
-        $pdo = AdvertDatabase::getConnection();
-        $sql = $pdo::$connection->query("SELECT * FROM adverts");
+        $connection = AdvertDatabase::getConnection();
+        $sql = $connection->query("SELECT * FROM adverts");
         $ads = $sql->fetchAll(\PDO::FETCH_ASSOC);
 
         return $ads ?? [];
@@ -57,12 +57,12 @@ class AdvertRepository
 
     private function saveDB(array $data):void
     {
-        $pdo = AdvertDatabase::getConnection();
+        $connection = AdvertDatabase::getConnection();
         
         $adTitle = $data['title'];
         $adDescription = $data['description'];
         $adPrice = $data['price'];
-        $result = $pdo::$connection->query(
+        $result = $connection->query(
             "INSERT INTO adverts(title, description, price) 
             VALUES ('{$adTitle}', '{$adDescription}', '{$adPrice}')"
         );
@@ -74,13 +74,13 @@ class AdvertRepository
 
     private function updateDB(array $data):void
     {
-        $pdo = AdvertDatabase::getConnection();
+        $connection = AdvertDatabase::getConnection();
         
         $adId = $data['id'];
         $adTitle = $data['title'];
         $adDescription = $data['description'];
         $adPrice = $data['price'];
-        $result = $pdo::$connection->query(
+        $result = $connection->query(
             "UPDATE adverts SET title = '{$adTitle}', description = '{$adDescription}', 
             price = '{$adPrice}' WHERE id = {$adId}"
         );
@@ -92,8 +92,8 @@ class AdvertRepository
 
     private function deleteDB(int $adId):void
     {
-        $pdo = AdvertDatabase::getConnection();
-        $result = $pdo::$connection->query(
+        $connection = AdvertDatabase::getConnection();
+        $result = $connection->query(
             "DELETE FROM adverts WHERE id = {$adId}"
         );
 

@@ -12,7 +12,7 @@ class AdvertDatabase
     private static $db_name;
 
     public static $connection;
-    public static $db;
+    public static $db_instance;
 
     protected function __construct() {
     }
@@ -22,14 +22,14 @@ class AdvertDatabase
         throw new \Exception("Cannot unserialize a singleton.");
     }
 
-    public static function getConnection(): AdvertDatabase
+    public static function getConnection(): \PDO
     {
         if (isset(self::$connection)) {
             return self;
         }
-
+        self::$db_instance = static::class;
         self::getCredentials();
-        
+
         try {
             self::$connection = new \PDO("mysql:host=".
             self::$db_host . ";dbname=" . self::$db_name, self::$db_user, self::$db_pass);
@@ -37,12 +37,12 @@ class AdvertDatabase
             die("Could not connect to the database " . self::$db_name . ":" . $pe->getMessage());
         }
 
-        return self;
+        return self::$connection;
     }
 
     public static function getCredentials(): void
     {
-        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+        $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
         $dotenv->safeLoad();
         self::$db_host = $_ENV['DB_HOST'];
         self::$db_user = $_ENV['DB_USER'];
