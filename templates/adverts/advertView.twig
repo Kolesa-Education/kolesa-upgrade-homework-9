@@ -1,0 +1,7 @@
+{% extends 'base.twig' %}
+{% block body %}
+    <h1>{{ advert.getTitle() }}</h1>
+    <p>{{ advert.getDescription() }}</p>
+    <span><b>{{ advert.getPrice() }}</b></span>
+
+{% endblock %}
