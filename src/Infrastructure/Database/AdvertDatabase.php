@@ -6,10 +6,10 @@ use App\Model\Entity\Advert;
 
 class AdvertDatabase
 {
-    private const DB_HOST = 'localhost:3306';
-    private const DB_USER = 'root';
-    private const DB_PASS = 'root';
-    private const DB_NAME = 'adverts';
+    private static $db_host;
+    private static $db_user;
+    private static $db_pass;
+    private static $db_name;
 
     public static $connection;
     public static $db;
@@ -28,14 +28,25 @@ class AdvertDatabase
             return self;
         }
 
-        self::$db = new static();
+        self::getCredentials();
+        
         try {
             self::$connection = new \PDO("mysql:host=".
-            self::DB_HOST . ";dbname=" . self::DB_NAME, self::DB_USER, self::DB_PASS);
+            self::$db_host . ";dbname=" . self::$db_name, self::$db_user, self::$db_pass);
         } catch (PDOException $pe) {
-            die("Could not connect to the database " . self::DB_NAME . ":" . $pe->getMessage());
+            die("Could not connect to the database " . self::$db_name . ":" . $pe->getMessage());
         }
-        
+
         return self;
+    }
+
+    public static function getCredentials(): void
+    {
+        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+        $dotenv->safeLoad();
+        self::$db_host = $_ENV['DB_HOST'];
+        self::$db_user = $_ENV['DB_USER'];
+        self::$db_pass = $_ENV['DB_PASS'];
+        self::$db_name = $_ENV['DB_NAME'];
     }
 }
