@@ -12,16 +12,9 @@ class AdvertDatabase
     private const DB_NAME = 'adverts';
 
     public static $connection;
-    private static $instances = [];
+    public static $db;
 
     protected function __construct() {
-        try {
-            self::$connection = new \PDO("mysql:host=".
-            self::DB_HOST . ";dbname=" . self::DB_NAME, self::DB_USER, self::DB_PASS);
-        } catch (PDOException $pe) {
-            die("Could not connect to the database " . self::DB_NAME . ":" . $pe->getMessage());
-        }
-        return self::$connection;
     }
 
     public function __wakeup()
@@ -31,11 +24,18 @@ class AdvertDatabase
 
     public static function getConnection(): AdvertDatabase
     {
-        $db = static::class;
-        if (!isset(self::$instances[$db])) {
-            self::$instances[$db] = new static();
+        if (isset(self::$connection)) {
+            return self;
         }
 
-        return self::$instances[$db];
+        self::$db = new static();
+        try {
+            self::$connection = new \PDO("mysql:host=".
+            self::DB_HOST . ";dbname=" . self::DB_NAME, self::DB_USER, self::DB_PASS);
+        } catch (PDOException $pe) {
+            die("Could not connect to the database " . self::DB_NAME . ":" . $pe->getMessage());
+        }
+        
+        return self;
     }
 }
