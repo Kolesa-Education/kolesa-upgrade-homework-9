@@ -36,14 +36,4 @@ class Advert
     {
         return $this->price;
     }
-
-    public function toArray(): array
-    {
-        return [
-            'id' => $this->getId(),
-            'title' => $this->getTitle(),
-            'description' => $this->getDescription(),
-            'price' => $this->getPrice(),
-        ];
-    }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Model\Validators;
 
-class AdvertValidator implements ValidatorInterface
+class AdvertValidator
 {
-    private const NOT_EMPTY_FIELDS = ['title', 'description'];
+    private const NOT_EMPTY_FIELDS = ['title', 'category'];
     private const MIN_TITLE_LENGTH = 10;
     private const MAX_TITLE_LENGTH = 80;
     private const MIN_PRICE = 0;
-    private const MAX_PRICE = 100000;
+    private const MAX_PRICE = 10000000;
 
     public function validate(array $data): array
     {

@@ -1,13 +1,20 @@
 {
+    "name": "hackeevo/my-php-project",
+    "description": "Another PHP Project",
+    "type": "project",
+    "license": "no",
+    "minimum-stability": "stable",
     "autoload": {
-        "psr-4" : {
-            "App\\" : "src/"
+        "psr-4": {
+            "App\\": "src/"
         }
     },
     "require": {
         "slim/slim": "^4.10",
         "slim/psr7": "^1.5",
         "slim/http": "^1.2",
-        "slim/twig-view": "^3.3"
+        "slim/twig-view": "^3.3",
+        "ext-simplexml": "*",
+      "ext-pdo": "*"
     }
 }

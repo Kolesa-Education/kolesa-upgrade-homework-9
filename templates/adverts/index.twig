@@ -5,7 +5,7 @@
 
     <ul>
         {% for advert in adverts %}
-            <li>{{ advert.getTitle() }}</li>
+            <li><a href="/adverts/{{ advert.getId() }}">{{ advert.getTitle() }} – {{ advert.getPrice() }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}
