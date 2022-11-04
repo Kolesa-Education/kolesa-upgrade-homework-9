@@ -18,6 +18,6 @@ $app->get('/adverts/new', Controllers\AdvertController::class . ':newAdvert');
 $app->post('/adverts', Controllers\AdvertController::class . ':create');
 $app->get('/adverts/{id}', Controllers\AdvertController::class . ':advertView');
 $app->get('/adverts/{id}/edit', Controllers\AdvertController::class . ':editAdvert');
-$app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':updateAdvert');
+$app->put('/adverts/{id}/edit', Controllers\AdvertController::class . ':updateAdvert');
 
 $app->run();
