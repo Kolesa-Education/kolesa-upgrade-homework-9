@@ -1,11 +1,12 @@
 {% extends "base.twig" %}
 
 {% block body %}
-    <h1>Список объявлений</h1>
-
+    <h1>ADDS</h1>
     <ul>
         {% for advert in adverts %}
-            <li>{{ advert.getTitle() }}</li>
+            <li><a href = "/adverts/{{ advert.getId() }}">{{ advert.getTitle() }}</li>
         {% endfor %}
     </ul>
+
+    <p><a href="/adverts/new">Новое объявление</a></p>
 {% endblock %}
