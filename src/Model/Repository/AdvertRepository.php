@@ -1,42 +1,44 @@
 <?php
-
 namespace App\Model\Repository;
-
 use App\Model\Entity\Advert;
+use App\Model\Entity\DB;
+use PDO;
+use PDOException;
 
 class AdvertRepository
 {
-    private const DB_PATH = '../storage/adverts.json';
-
+    private $dbname = 'adverts';
     public function getAll()
     {
-        $result = [];
-
-        foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
+        $query = "SELECT * FROM `". $this->dbname ."`";
+        $db = new DB();
+        $results = $db->run($query);
+        $result = array();
+        foreach($val as $result){
+            $val = new Advert($result);
+            array_push($result, $val);
         }
-
         return $result;
     }
 
-    public function create(array $advertData): Advert {
-        $db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
-        $advertData['id'] = $increment;
-        $db[$increment]   = $advertData;
-
-        $this->saveDB($db);
-
-        return new Advert($advertData);
+    public function getById(int $id)
+    {
+        $query = "SELECT * FROM `". $this->dbname ."` WHERE id = " . $id;
+        $db = new DB();
+        $result = $db->runone($query);
+        return new Advert($result);
     }
 
-    private function getDB(): array
-    {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+    public function create(array $info): Advert {
+        $query = "INSERT INTO `". $this->dbname ."`(title, description, price) VALUES (:title, :description, :price)";
+        $db = new DB();
+        $db->dosql($query, $info);
+        return new Advert($info);
     }
 
-    private function saveDB(array $data):void
-    {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+    public function update(array $info) {
+        $query = "UPDATE `". $this->dbname ."` SET title=:title, description=:description, price=:price WHERE id=:id";
+        $db = new DB();
+        $result = $db->dosql($query, $info);
     }
 }

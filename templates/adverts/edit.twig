@@ -1,0 +1,13 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    <div>Редактиврование</div>
+    <form action="/adverts/{{ advert.getId() }}/edit" method="post">
+        <input name="advert[id]" value="{{ advert.getId() }}">
+        <input name="advert[title]" value="{{ advert.getTitle() ?? '' }}">
+        <input name="advert[description]" value="{{ advert.getDescription() ?? '' }}">
+        <input name="advert[price]" value="{{ advert.getPrice() ?? 0 }}">
+        <br>
+        <input type="submit" value="Update">
+    </form>
+{% endblock %}
