@@ -19,6 +19,20 @@ class AdvertRepository
         return $result;
     }
 
+    public function getById($id)
+    {
+        $result = [];
+
+        foreach ($this->getDB() as $advertData) {
+            if ((int) $id==$advertData['id'])
+            {
+                $result[] = new Advert($advertData);
+            }
+        }
+
+        return $result;
+    }
+
     public function create(array $advertData): Advert {
         $db               = $this->getDB();
         $increment        = array_key_last($db) + 1;
@@ -28,6 +42,12 @@ class AdvertRepository
         $this->saveDB($db);
 
         return new Advert($advertData);
+    }
+
+    public function edit(array $advertData): Advert {
+        $db               = $this->getDB();
+        $db[$advertData['id']] = $advertData;
+        $this->saveDB($db);
     }
 
     private function getDB(): array

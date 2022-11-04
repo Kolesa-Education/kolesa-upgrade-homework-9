@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
 
-use Slim\Http\ServerRequest;
-use Slim\Http\Response;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as ServerRequest;
 use Slim\Views\Twig;
 
 class IndexController
