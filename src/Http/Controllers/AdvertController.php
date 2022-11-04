@@ -47,4 +47,23 @@ class AdvertController
 
         return $response->withRedirect('/adverts');
     }
+
+    public function singleAdvert(ServerRequest $request, Response $response, array $args)
+    {
+        $id = $args['id'] ?? '1';
+        $advertsRepo = new AdvertRepository();
+        $adverts     = $advertsRepo->getById($id);
+        // $adverts     = $adverts->toArray();
+        $view = Twig::fromRequest($request);
+        $statement = [];
+        foreach ($adverts as $key => $value) {
+            if ($key=="id") {
+                continue;
+            }
+            array_push($statement, $value);
+        }
+        
+
+        return $view->render($response, 'adverts/single.twig', ['advert' => $statement]);
+    }
 }

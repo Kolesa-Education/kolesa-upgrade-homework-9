@@ -3,6 +3,8 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Advert;
+use PDO;
+use PDOStatement;
 
 class AdvertRepository
 {
@@ -12,31 +14,63 @@ class AdvertRepository
     {
         $result = [];
 
-        foreach ($this->getDB() as $advertData) {
+        foreach ($this->getDB()->query('SELECT * FROM adverts') as $advertData) {
             $result[] = new Advert($advertData);
         }
 
         return $result;
     }
 
+    public function getById(int $id)
+    {
+
+        $db = $this->getDB();
+        $stm = $db->prepare("SELECT * FROM adverts WHERE id = :id LIMIT 1");
+        $stm->bindValue(':id', $id, PDO::PARAM_INT);
+        $stm->execute();
+        $result = $stm->fetch(PDO::FETCH_ASSOC);
+
+        return $result;
+    }
+
     public function create(array $advertData): Advert {
         $db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
-        $advertData['id'] = $increment;
-        $db[$increment]   = $advertData;
-
-        $this->saveDB($db);
+        $id = $db->lastInsertId();  
+        $advertData['id'] = $id;
+        $stm = $db->prepare("INSERT INTO adverts VALUES (:id, :title, :description, :price)");
+        $stm->execute($advertData);
 
         return new Advert($advertData);
     }
 
-    private function getDB(): array
-    {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+    public function modify(array $advertData, int $id): Advert {
+        $db               = $this->getDB();
+        $advertData['id'] = $id;
+        $stm = $db->prepare("UPDATE adverts SET title = :title, description = :description, price = :price WHERE id = :id");
+        $stm->execute($advertData);
+
+
+        return new Advert($advertData);
     }
 
-    private function saveDB(array $data):void
+    private function getDB()
     {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        $host = '127.0.0.1';
+        $db   = 'adverts';
+        $user = 'root';
+        $port = "3307";
+        $pass = 'Miracle.1208';
+        $charset = 'utf8mb4';
+
+        $options = [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES   => false,
+        ];
+        $dsn = "mysql:host=$host;dbname=$db;charset=$charset;port=$port";
+        $pdo = new \PDO($dsn, $user, $pass, $options);
+        
+        return $pdo;
     }
+
 }
