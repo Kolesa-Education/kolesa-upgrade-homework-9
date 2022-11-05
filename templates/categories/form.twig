@@ -1,0 +1,23 @@
+{% block form %}
+    <div>
+        <label>
+            Заголовок *
+            <input type="text" name="category[title]" value="{{ data.title ?? '' }}">
+            {% if errors.title %}
+                <div style="color: red">{{ errors.title }}</div>
+            {% endif %}
+        </label>
+    </div>
+    <br>
+    <div>
+        <label>
+            Описание *
+            <input type="text" name="category[description]" value="{{ data.description ?? '' }}">
+            {% if errors.description %}
+                <div style="color: red">{{ errors.description }}</div>
+            {% endif %}
+        </label>
+    </div>
+    <br>
+    <br>
+{% endblock %}

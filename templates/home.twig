@@ -2,6 +2,6 @@
 
 {% block body %}
     <h1>Добро пожаловать в панель управления, {{ name }}</h1>
-    <a href="/adverts">Adverts</a>
-    <a href="/categories">Categories</a>
+    <a href="{{ url_for('adverts.index') }}">Объявления</a>
+    <a href="{{ url_for('categories.index') }}">Категории</a>
 {% endblock %}

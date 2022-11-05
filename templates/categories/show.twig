@@ -1,0 +1,23 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    <h3>{{ category.getTitle() }}</h3>
+    <div>{{ category.getDescription() }}</div>
+    <div>
+        <a href="{{ url_for('categories.edit', { 'id': category.getId() }) }}">Редактировать</a>
+    </div>
+    <dvi>
+        <a href="{{ url_for('categories.index') }}">С списку категорий</a>
+    </dvi>
+
+    {% if adverts is not empty %}
+        <ul>
+            {% for advert in adverts %}
+                <li><a href="{{ url_for('adverts.show', { 'id': advert.getId() }) }}"></a>{{ advert.getTitle() }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
+
+{% endblock %}

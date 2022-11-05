@@ -1,7 +1,7 @@
 {% extends "base.twig" %}
 
 {% block body %}
-    <h1>Создать новую категорию</h1>
+    <h1>Обновить категорию</h1>
 
     {% if errors is not empty %}
         <div style="color: red">При сохранении произошла ошибка</div>
@@ -14,8 +14,9 @@
         </ul>
     {% endif %}
 
-    <form action="{{ url_for('categories.store') }}" method="post">
+    <form action="{{ url_for('categories.update', { 'id': category.getId() }) }}" method="post">
+        <input type="hidden" name="_METHOD" value="PATCH">
         {% include "categories/form.twig" %}
-        <input type="submit" value="Создать">
+        <input type="submit" value="Обновить">
     </form>
 {% endblock %}
