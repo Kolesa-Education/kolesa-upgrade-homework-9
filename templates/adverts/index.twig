@@ -3,11 +3,17 @@
 {% block body %}
     <h1>Список объявлений</h1>
     <div>
-        <a href="/adverts/new">Create advert</a>
+        <a href="{{ url_for('home') }}">На главную</a>
+    </div>
+    <div>
+        <a href="{{ url_for('categories.index') }}">К категориям</a>
+    </div>
+    <div>
+        <a href="{{ url_for('adverts.new') }}">Создать объявление</a>
     </div>
     <ul>
         {% for advert in adverts %}
-            <li><a href="/advert/{{ advert.getId() }}">{{ advert.getTitle() }}</a></li>
+            <li><a href="{{ url_for('adverts.show', { 'id': advert.getId() }) }}">{{ advert.getTitle() }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}

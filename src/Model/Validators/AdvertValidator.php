@@ -2,9 +2,11 @@
 
 namespace App\Model\Validators;
 
+use App\Model\Repository\CategoryRepository;
+
 class AdvertValidator implements ValidatorInterface
 {
-    private const NOT_EMPTY_FIELDS = ['title', 'description'];
+    private const NOT_EMPTY_FIELDS = ['title', 'description', 'categoryId'];
     private const MIN_TITLE_LENGTH = 10;
     private const MAX_TITLE_LENGTH = 80;
     private const MIN_PRICE = 0;
@@ -20,7 +22,8 @@ class AdvertValidator implements ValidatorInterface
 
         return array_merge(
             $this->validateLength($data),
-            $this->validatePrice($data)
+            $this->validatePrice($data),
+            $this->validatePriceCategory($data)
         );
     }
 
@@ -71,6 +74,18 @@ class AdvertValidator implements ValidatorInterface
         if ($price > self::MAX_PRICE) {
             return [
                 'price' => 'Цена не может быть больше ' . self::MAX_PRICE,
+            ];
+        }
+
+        return [];
+    }
+
+    private function validatePriceCategory($data)
+    {
+        $categoryRepo = new CategoryRepository();
+        if (empty($categoryRepo->getCategoryById($data['categoryId'])->getId())) {
+            return [
+                'category' => 'Категория не найдена',
             ];
         }
 

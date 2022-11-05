@@ -4,39 +4,53 @@ namespace App\Model\Repository;
 
 use App\Model\Entity\Advert;
 
-class AdvertRepository
+class AdvertRepository extends Repository
 {
-    private const DB_PATH = '../storage/adverts.json';
-
     public function getAll()
     {
-        $result = [];
-
-        foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
+        $records = $this->conn->query("SELECT * FROM adverts")->fetchAll();
+        foreach ($records as $record) {
+            $res[] = new Advert($record);
         }
 
-        return $result;
+        return $res;
     }
 
-    public function create(array $advertData): Advert {
-        $db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
-        $advertData['id'] = $increment;
-        $db[$increment]   = $advertData;
-
-        $this->saveDB($db);
-
-        return new Advert($advertData);
-    }
-
-    private function getDB(): array
+    public function create(array $data)
     {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+        $title = $data['title'];
+        $description = $data['description'];
+        $price = $data['price'];
+        $categoryId = $data['categoryId'];
+
+        try {
+            $this->conn->exec(
+                "INSERT INTO adverts (title, description, price, category_id) VALUES ('{$title}', '{$description}', {$price}, {$categoryId})");
+            return true;
+        } catch (\PDOException $e) {
+            return $e;
+        }
     }
 
-    private function saveDB(array $data):void
+    public function getAdvertById(int $id)
     {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        try {
+            return new Advert($this->conn->query("SELECT * FROM adverts WHERE id = {$id}")->fetch());
+        } catch (\PDOException) {
+            return false;
+        }
     }
+
+    public function updateAdvertById(int $id, array $data)
+    {
+        $title = $data['title'];
+        $description = $data['description'];
+        try {
+            $this->conn->query("UPDATE adverts SET title = '{$title}', description = '{$description}' WHERE id = {$id}");
+            return true;
+        } catch (\PDOException) {
+            return false;
+        }
+    }
+
 }

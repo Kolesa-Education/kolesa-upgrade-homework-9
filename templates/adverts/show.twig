@@ -1,0 +1,19 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    <h3>{{ advert.getTitle() }}</h3>
+    <div>{{ advert.getDescription() }}</div>
+    <div>{{ advert.getPrice() }}</div>
+    <div>
+        Категория объявления -
+        <a href="{{ url_for('categories.show', { 'id': category.getId() }) }}">
+            {{ category.getTitle() }}
+        </a>
+    </div>
+    <div>
+        <a href="{{ url_for('adverts.edit', { 'id': advert.getId() }) }}">Редактировать</a>
+    </div>
+    <dvi>
+        <a href="{{ url_for('adverts.index') }}">К списку объявлений</a>
+    </dvi>
+{% endblock %}

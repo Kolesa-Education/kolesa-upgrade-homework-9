@@ -1,0 +1,14 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    <h1>Обновить объявление</h1>
+    {% if errors is not empty %}
+        <div style="color: red">При сохранении произошла ошибка</div>
+        <br>
+    {% endif %}
+    <form action="{{ url_for('adverts.update', { 'id': advert.getId() }) }}" method="post">
+        <input type="hidden" name="_METHOD" value="PATCH">
+        {% include "adverts/form.twig" %}
+        <input type="submit" value="Обновить">
+    </form>
+{% endblock %}
