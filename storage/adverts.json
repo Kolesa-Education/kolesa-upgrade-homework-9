@@ -4,5 +4,23 @@
         "description": "Батарейка 100%",
         "price": "80000",
         "id": 1
+    },
+    "2": {
+        "title": "Xiaomi Mi Phone",
+        "description": "Стааарый совсем",
+        "price": "10000",
+        "id": 2
+    },
+    "3": {
+        "title": "Samsung A13 310",
+        "description": "Хороший телефон",
+        "price": "45000",
+        "id": 3
+    },
+    "4": {
+        "title": "Xiaomi Mi Phone",
+        "description": "Стааарый совсем",
+        "price": "10005",
+        "id": 4
     }
 }

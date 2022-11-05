@@ -1,0 +1,50 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    <h1>Изменить объявление</h1>
+
+    {% if errors is not empty %}
+        <div style="color: red">При изменении произошла ошибка</div>
+        <ul>
+            {% for error in errors %}
+                <li>
+                    {{ error }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    <form action="/adverts/{{ advert.getId() }}/edit" method="post">
+        <div>
+            <label>
+                Заголовок *
+                <input type="text" name="advert[title]" value="{{ advert.getTitle() }}">
+                {% if errors.title %}
+                    <div style="color: red">{{ errors.title }}</div>
+                {% endif %}
+            </label>
+        </div>
+        <br>
+        <div>
+            <label>
+                Описание *
+                <input type="text" name="advert[description]" value="{{ advert.getDescription }}">
+                {% if errors.description %}
+                    <div style="color: red">{{ errors.description }}</div>
+                {% endif %}
+            </label>
+        </div>
+        <br>
+        <div>
+            <label>
+                Цена *
+                <input type="number" name="advert[price]" value="{{ advert.getPrice }}">
+                {% if errors.price %}
+                    <div style="color: red">{{ errors.price }}</div>
+                {% endif %}
+            </label>
+        </div>
+        <br>
+        <input type="submit" value="Save">
+    </form>
+    <a href="/adverts/{{ advert.getId() }}"> <button>Cancel</button> </a>
+{% endblock %}
