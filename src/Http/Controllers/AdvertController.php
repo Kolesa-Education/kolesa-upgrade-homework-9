@@ -15,15 +15,7 @@ class AdvertController
     {
         $advertsRepo = new AdvertRepository();
         $adverts     = $advertsRepo->getAll();
-
-        // foreach ($adverts as  $advert){
-        //     $advert = $advert->toArray();
-        //     print_r($advert["id"]);
-        // }
-        // die;
         $view = Twig::fromRequest($request);
-        // print_r($adverts);
-        // die;
         return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
     }
 
@@ -34,16 +26,6 @@ class AdvertController
             $advert = $advertsRepo->getById($advertId);
             $view = Twig::fromRequest($request);
             return $view->render($response, 'adverts/advert.twig', ['advert' => $advert]);
-        // $advertsRepo = new AdvertRepository();
-        // $adverts     = $advertsRepo->getAll();
-        // foreach ($adverts as  $advert){
-        //     $advertArr = $advert->toArray();
-        //     if ($advertArr["id"] == $idArray['id']){
-        //         $view = Twig::fromRequest($request);
-
-        //         return $view->render($response, 'adverts/advert.twig', ['advert' => $advert]);
-        //     }
-        // }
         
     }
     public function newAdvert(ServerRequest $request, Response $response) {
