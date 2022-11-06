@@ -1,8 +1,14 @@
 {
     "1": {
-        "title": "Продам iPhone 8",
-        "description": "Батарейка 100%",
-        "price": "80000",
-        "id": 1
+        "title": "Поданноeeeeee",
+        "description": "Поданноеeeeeeee",
+        "price": "900",
+        "id": "1"
+    },
+    "2": {
+        "title": "NewAdvertEDIT",
+        "description": "DescriptionEDITAdvert",
+        "price": "30001",
+        "id": "2"
     }
 }
