@@ -47,4 +47,57 @@ class AdvertController
 
         return $response->withRedirect('/adverts');
     }
+
+    public function details(ServerRequest $request, Response $response,  array $args)
+    {
+        $advertsRepo = new AdvertRepository();
+        $adverts     = $advertsRepo->getAll();
+        foreach ($adverts as $value) {
+            if ($args['id'] == $value->getId()) {
+                    $advert = $value;
+                }
+        }
+
+        $view = Twig::fromRequest($request);
+
+        return $view->render($response, 'adverts/details.twig', ['advert' => $advert]);
+    }
+
+    public function editAdvert(ServerRequest $request, Response $response, array $args)
+    {
+        $advertsRepo = new AdvertRepository();
+        $adverts     = $advertsRepo->getAll();
+        foreach ($adverts as $value) {
+            if ($args['id'] == $value->getId()) {
+                $advert = $value;
+            }
+        }
+
+        $view = Twig::fromRequest($request);
+
+        return $view->render($response, 'adverts/edit.twig', ['advert' => $advert]);
+    }
+
+    public function update(ServerRequest $request, Response $response, array $args)
+    {
+        $repo        = new AdvertRepository();
+        $advertData  = $request->getParsedBodyParam('advert', []);
+        $advertData['id'] = $args['id'];
+
+        $validator = new AdvertValidator();
+        $errors    = $validator->validate($advertData);
+
+        if (!empty($errors)) {
+            $view = Twig::fromRequest($request);
+
+            return $view->render($response, 'adverts/edit.twig', [
+                'data'   => $advertData,
+                'errors' => $errors,
+            ]);
+        }
+
+        $repo->update($advertData);
+
+        return $response->withRedirect('/adverts');
+    }
 }

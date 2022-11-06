@@ -1,0 +1,8 @@
+{
+  "DB": {
+    "host": "localhost",
+    "user": "root",
+    "pass": "",
+    "db_name": "homework_9"
+  }
+}
