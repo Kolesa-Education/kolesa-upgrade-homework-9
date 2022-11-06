@@ -12,16 +12,15 @@ use Slim\Views\Twig;
 
 class LabelController
 {
-    public function labelId(ServerRequest $request, Response $response, $args)
+    public function labelId(ServerRequest $request, Response $response, array $args)
     {
 
-        $number = $args['number'] ?? '0';
-
+        $number = $args['args'] ?? '0';
         $advertRepo = new AdvertRepository();
 
         $advert = $advertRepo->getAll();
 
-        $array = (array)($advert[$number]);
+        $array = (array)($advert[$number-1]);
 
         $arr = [];
 
