@@ -2,6 +2,7 @@
 
 
 namespace App\Model\Entity;
+
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -19,7 +20,7 @@ class Advert
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
      */
-    protected ?int    $id;
+    protected ?int $id;
 
     /**
      * @var string|null
@@ -40,7 +41,7 @@ class Advert
      *
      * @ORM\Column(name="price", type="integer", nullable=true)
      */
-    protected ?int    $price;
+    protected ?int $price;
 
     public function __construct($data = [])
     {
