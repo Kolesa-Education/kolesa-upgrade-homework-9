@@ -45,12 +45,43 @@ class AdvertRepository extends Repository
     {
         $title = $data['title'];
         $description = $data['description'];
+        $price = $data['price'];
+        $categoryId = $data['categoryId'];
         try {
-            $this->conn->query("UPDATE adverts SET title = '{$title}', description = '{$description}' WHERE id = {$id}");
+            $this->conn->query("UPDATE adverts SET title = '{$title}', description = '{$description}', price = {$price}, category_id = {$categoryId} WHERE id = {$id}");
             return true;
         } catch (\PDOException) {
             return false;
         }
     }
 
+    public function searchAdverts(string $query)
+    {
+        $records = $this->conn->query("SELECT * FROM adverts WHERE title LIKE '%{$query}%'")->fetchAll();
+        foreach ($records as $record) {
+            $res[] = new Advert($record);
+        }
+
+        return $res;
+    }
+
+    public function searchAdvertsByCategoryId(string $query, int $categoryId)
+    {
+        $records = $this->conn->query("SELECT * FROM adverts WHERE category_id = {$categoryId} AND title LIKE '%{$query}%'")->fetchAll();
+        foreach ($records as $record) {
+            $res[] = new Advert($record);
+        }
+
+        return $res;
+    }
+
+    public function getAdvertsByCategoryId(int $categoryId)
+    {
+        $records = $this->conn->query("SELECT * FROM adverts WHERE category_id = '{$categoryId}'")->fetchAll();
+        foreach ($records as $record) {
+            $res[] = new Advert($record);
+        }
+
+        return $res;
+    }
 }

@@ -32,7 +32,14 @@
         <label>
             Категория объявления *
             <select name="category">
+{#                {% for category in categories %}#}
+{#                    <option value="{{ category.getId() }}">{{ category.getTitle() }}</option>#}
+{#                {% endfor %}#}
                 {% for category in categories %}
+                    {% if categoryId == category.getId() %}
+                        <option value="{{ category.getId() }}" selected>{{ category.getTitle() }}</option>
+                    {% endif %}
+
                     <option value="{{ category.getId() }}">{{ category.getTitle() }}</option>
                 {% endfor %}
             </select>

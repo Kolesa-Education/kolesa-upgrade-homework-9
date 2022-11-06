@@ -13,11 +13,41 @@ class AdvertController
 {
     public function index(ServerRequest $request, Response $response)
     {
+        $query = $request->getQueryParams();
+        $search = $query['search'];
+        $categoryId = intval($query['category']);
         $advertsRepo = new AdvertRepository();
-        $adverts = $advertsRepo->getAll();
-        $view = Twig::fromRequest($request);
+        $categoryRepo = new CategoryRepository();
+        $categories = $categoryRepo->getAll();
 
-        return $view->render($response, 'adverts/index.twig', ['adverts' => $adverts]);
+        if (!empty($search) && !empty($categoryId)) {
+            $adverts = $advertsRepo->searchAdvertsByCategoryId($search, $categoryId);
+        } elseif (!empty($categoryId)) {
+            $adverts = empty($categoryId)
+                ? $advertsRepo->getAll()
+                : $advertsRepo->getAdvertsByCategoryId($categoryId);
+        } elseif (!empty($search)) {
+            $adverts = $advertsRepo->searchAdverts($search);
+        } else {
+            $adverts = $advertsRepo->getAll();
+        }
+        $error = '';
+        if (empty($adverts)) {
+            $adverts = empty($categoryId)
+                ? $advertsRepo->getAll()
+                : $advertsRepo->getAdvertsByCategoryId($categoryId);
+            $error = 'Объявления содержащие слова запроса не найдены';
+        }
+        $view = Twig::fromRequest($request);
+        $params = [
+            'adverts' => $adverts,
+            'categories' => $categories,
+            'query' => $search,
+            'categoryId' => $categoryId,
+            'error' => $error
+        ];
+
+        return $view->render($response, 'adverts/index.twig', $params);
     }
 
     public function new(ServerRequest $request, Response $response) {
@@ -85,7 +115,8 @@ class AdvertController
         $params = [
             'advert' => $advert,
             'data' => $formData,
-            'categories' => $categories
+            'categories' => $categories,
+            'categoryId' => $advert->getCategoryId()
         ];
 
         return $view->render($response, 'adverts/edit.twig', $params);
@@ -113,6 +144,6 @@ class AdvertController
         }
         $advertsRepo->updateAdvertById($advertId, $advertData);
 
-        return $response->withRedirect('/categories/' . $advertId);
+        return $response->withRedirect('/adverts/' . $advertId);
     }
 }

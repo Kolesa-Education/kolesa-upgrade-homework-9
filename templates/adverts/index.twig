@@ -3,6 +3,27 @@
 {% block body %}
     <h1>Список объявлений</h1>
     <div>
+        <form action="{{ url_for('adverts.index') }}">
+            <label>
+                <input type="search" name="search" value="{{ query ?? '' }}">
+            </label>
+            <label>
+                Категория объявления
+                <select name="category">
+                    <option value="">Все категории</option>
+                    {% for category in categories %}
+                        {% if categoryId == category.getId() %}
+                            <option value="{{ category.getId() }}" selected>{{ category.getTitle() }}</option>
+                        {% endif %}
+
+                        <option value="{{ category.getId() }}">{{ category.getTitle() }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <input type="submit" value="Поиск">
+        </form>
+    </div>
+    <div>
         <a href="{{ url_for('home') }}">На главную</a>
     </div>
     <div>
@@ -12,6 +33,9 @@
         <a href="{{ url_for('adverts.new') }}">Создать объявление</a>
     </div>
     <ul>
+        {% if error %}
+            <div>{{ error }}</div>
+        {% endif %}
         {% for advert in adverts %}
             <li><a href="{{ url_for('adverts.show', { 'id': advert.getId() }) }}">{{ advert.getTitle() }}</a></li>
         {% endfor %}
