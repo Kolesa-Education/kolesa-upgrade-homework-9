@@ -3,40 +3,60 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Advert;
+use mysql_xdevapi\Exception;
+use mysqli;
 
 class AdvertRepository
 {
-    private const DB_PATH = '../storage/adverts.json';
+    private string $servername = "localhost";
+    private string $dbname = "Adverts";
+    private string $username = "root";
+    private string $password = "";
+    private mysqli $database;
 
-    public function getAll()
+    /**
+     * @throws Exception if operation fail
+     */
+    public function __construct (){
+            $this->database = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+    }
+
+    public function getAll(): array
     {
-        $result = [];
-
-        foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
+        $adverts = [];
+        $db = $this->database;
+        $result = $db->query("SELECT * FROM Adverts");
+        while($row = $result->fetch_assoc()) {
+            $adverts[] = new Advert($row);
         }
+        return $adverts;
+    }
 
-        return $result;
+    public function getById(int $id): Advert {
+        $db = $this->database;
+        $result = $db->query("SELECT * FROM Adverts WHERE id = " . $id);
+        $result = $result->fetch_assoc();
+        $adv = new Advert($result);
+        return $adv;
     }
 
     public function create(array $advertData): Advert {
-        $db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
-        $advertData['id'] = $increment;
-        $db[$increment]   = $advertData;
-
-        $this->saveDB($db);
-
+        $db = $this->database;
+        $stmt = $db->prepare("INSERT INTO Adverts (title, description, price) VALUES (?, ?, ?)");
+        $stmt->bind_param("ssi", $advertData["title"], $advertData["description"], $advertData["price"]);
+        $stmt->execute();
         return new Advert($advertData);
     }
 
-    private function getDB(): array
-    {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+    public function update(array $advertData, int $id) {
+        $db = $this->database;
+        $stmt = $db->prepare("UPDATE Adverts SET title=?, description=?, price=? WHERE id=?");
+        $stmt->bind_param("ssii",
+            $advertData["title"],
+            $advertData["description"],
+            $advertData["price"],
+            $id);
+        $stmt->execute();
     }
 
-    private function saveDB(array $data):void
-    {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
-    }
 }
