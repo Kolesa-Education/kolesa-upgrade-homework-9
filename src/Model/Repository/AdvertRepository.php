@@ -3,6 +3,7 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Advert;
+use mysql_xdevapi\Exception;
 use mysqli;
 
 class AdvertRepository
@@ -11,11 +12,19 @@ class AdvertRepository
     private string $dbname = "Adverts";
     private string $username = "root";
     private string $password = "";
+    private mysqli $database;
+
+    /**
+     * @throws Exception if operation fail
+     */
+    public function __construct (){
+            $this->database = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+    }
 
     public function getAll(): array
     {
         $adverts = [];
-        $db = $this->getDB();
+        $db = $this->database;
         $result = $db->query("SELECT * FROM Adverts");
         while($row = $result->fetch_assoc()) {
             $adverts[] = new Advert($row);
@@ -24,7 +33,7 @@ class AdvertRepository
     }
 
     public function getById(int $id): Advert {
-        $db = $this->getDB();
+        $db = $this->database;
         $result = $db->query("SELECT * FROM Adverts WHERE id = " . $id);
         $result = $result->fetch_assoc();
         $adv = new Advert($result);
@@ -32,7 +41,7 @@ class AdvertRepository
     }
 
     public function create(array $advertData): Advert {
-        $db = $this->getDB();
+        $db = $this->database;
         $stmt = $db->prepare("INSERT INTO Adverts (title, description, price) VALUES (?, ?, ?)");
         $stmt->bind_param("ssi", $advertData["title"], $advertData["description"], $advertData["price"]);
         $stmt->execute();
@@ -40,7 +49,7 @@ class AdvertRepository
     }
 
     public function update(array $advertData, int $id) {
-        $db = $this->getDB();
+        $db = $this->database;
         $stmt = $db->prepare("UPDATE Adverts SET title=?, description=?, price=? WHERE id=?");
         $stmt->bind_param("ssii",
             $advertData["title"],
@@ -48,15 +57,6 @@ class AdvertRepository
             $advertData["price"],
             $id);
         $stmt->execute();
-    }
-
-    private function getDB(): mysqli
-    {
-        $db = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
-        if ($db->connect_error) {
-            die("Database connection failed: " . $db->connect_error);
-        }
-        return $db;
     }
 
 }

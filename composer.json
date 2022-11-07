@@ -10,6 +10,7 @@
         "slim/http": "^1.2",
         "slim/twig-view": "^3.3",
       "ext-pdo": "*",
-        "ext-mysqli": "*"
+        "ext-mysqli": "*",
+      "ext-mysql_xdevapi": "*"
     }
 }
