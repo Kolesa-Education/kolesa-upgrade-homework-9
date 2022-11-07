@@ -30,6 +30,32 @@ class AdvertRepository
         return new Advert($advertData);
     }
 
+    public function getViewId($id)
+    {
+        $result = [];
+
+        foreach ($this->getDB() as $advertData) {
+            if ((int) $id==$advertData['id'])
+            {
+                $result[] = new Advert($advertData);
+            }
+        }
+        return $result;
+    }
+
+    public function edit(array $advertData): Advert 
+    {
+        $db = $this->getDB();
+        $db[$advertData['id']] = $advertData;
+
+        $this->saveDB($db);
+
+        return new Advert($advertData);
+
+
+        
+    }
+
     private function getDB(): array
     {
         return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
