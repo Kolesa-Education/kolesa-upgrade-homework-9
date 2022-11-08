@@ -13,7 +13,7 @@ use Slim\Views\Twig;
 
 class AdvertController extends BaseController
 {
-    protected BaseRepository $categoryRepo;
+    protected CategoryRepository $categoryRepo;
     protected array $categories;
 
     public function __construct()
@@ -31,9 +31,7 @@ class AdvertController extends BaseController
         try {
             $adverts = $this->repo->getByCategoryAndTitle($categoryId, $title);
         } catch (Exception $e) {
-            echo $e->getMessage();
-            $response->withStatus(404);
-            die;
+            return $response->withStatus(404)->write($e->getMessage());
         }
 
         $view = Twig::fromRequest($request);
@@ -53,9 +51,7 @@ class AdvertController extends BaseController
         try {
             $advert = $this->repo->getById($id);
         } catch (Exception $e) {
-            echo $e->getMessage();
-            $response->withStatus(404);
-            die;
+            return $response->withStatus(404)->write($e->getMessage());
         }
 
         return $view->render($response, 'adverts/show.twig', ['advert' => $advert]);
@@ -97,9 +93,7 @@ class AdvertController extends BaseController
         try {
             $advert = $this->repo->getById($id);
         } catch (Exception $e) {
-            echo $e->getMessage();
-            $response->withStatus(404);
-            die;
+            return $response->withStatus(404)->write($e->getMessage());
         }
 
         $view = Twig::fromRequest($request);

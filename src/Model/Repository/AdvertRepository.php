@@ -39,7 +39,7 @@ class AdvertRepository extends BaseRepository
 
         $stmt->execute();
 
-        $records = $stmt->fetchAll(PDO::FETCH_OBJ);
+        $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($records as $record) {
             $result[] = new $this->model(json_decode(json_encode($record),true));

@@ -41,14 +41,14 @@ class Advert extends AbstractModel
         return $this->price;
     }
 
-    public function getCategory(): ?string
+    public function getCategory(): Category
     {
         $categoryRepo = new CategoryRepository();
         $categories = $categoryRepo->getAll();
 
         foreach ($categories as $category) {
             if ($category->getId() == $this->categoryId) {
-                return $category->getTitle();
+                return $category;
             }
         }
 
@@ -62,7 +62,7 @@ class Advert extends AbstractModel
             'title' => $this->getTitle(),
             'description' => $this->getDescription(),
             'price' => $this->getPrice(),
-            'category' => $this->getCategory(),
+            'category' => $this->getCategory()->getTitle(),
         ];
     }
 }

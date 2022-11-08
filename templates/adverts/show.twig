@@ -4,7 +4,7 @@
     <h1>Объявление</h1>
     <h3>{{ advert.getTitle }}</h3>
     <p>
-        Категория: {{ advert.getCategory }}
+        Категория: {{ advert.getCategory.getTitle }}
     </p>
     <p>
         Описание: {{ advert.getDescription }}
@@ -12,7 +12,5 @@
     <p>
         Цена: {{ advert.getPrice }} тенге
     </p>
-    <form action="{{ advert.getId }}/edit">
-        <input type="submit" value="Edit" />
-    </form>
+    <a href="{{ advert.getId }}/edit"> Edit </a>
 {% endblock %}

@@ -6,10 +6,10 @@ use App\Model\Entity\AbstractModel;
 use config\Database;
 use Exception;
 use PDO;
+use function Doctrine\Common\Cache\Psr6\get;
 
 abstract class BaseRepository
 {
-    private Database $db;
     protected ?PDO $connection;
     protected AbstractModel $model;
     protected string $table;
@@ -18,8 +18,8 @@ abstract class BaseRepository
 
     public function __construct()
     {
-        $this->db = new Database();
-        $this->connection = $this->db->getConnection();
+        $db = new Database();
+        $this->connection = $db->getConnection();
     }
 
     public function getAll()
