@@ -17,16 +17,14 @@ class AdvertRepository
         return $result;
     }
 
-    public function getById(int $id): Advert
+    public function getById(int $id): Advert | null
     {
-        $adArray = $this->getDB();
-        foreach ($adArray as $ad) {
-            if ($ad['id'] == $id) {
-                return new Advert($ad);
-            }
+        $ad = $this->getOneDB($id) ?? [];
+        if (count($ad) === 0) {
+            return null;
         }
-        
-        return new Advert;
+
+        return new Advert($ad);
     }
 
     public function create(array $advertData): Advert {
@@ -53,6 +51,18 @@ class AdvertRepository
         $ads = $sql->fetchAll(\PDO::FETCH_ASSOC);
 
         return $ads ?? [];
+    }
+
+    private function getOneDB(int $id): array
+    {
+        $connection = AdvertDatabase::getConnection();
+        $sql = $connection->query("SELECT * FROM adverts WHERE id = '$id'");
+        $ad = $sql->fetch(\PDO::FETCH_ASSOC);
+        if (!$ad) {
+            return [];
+        }
+
+        return $ad;
     }
 
     private function saveDB(array $data):void

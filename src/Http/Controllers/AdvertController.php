@@ -30,11 +30,22 @@ class AdvertController
     public function advertEdit(ServerRequest $request, Response $response, array $args)
     {
         $view = Twig::fromRequest($request);
+        $errors = [];
+
         $adId = $args['id'];
+        if (!is_numeric($adId)) {
+            return $response->write('Объявление не найдено.');
+        }
         $advertsRepo = new AdvertRepository();
         $advert = $advertsRepo->getById($adId);
-
-        return $view->render($response, 'adverts/edit.twig', ['advert' => $advert]);
+        if ($advert === null) {
+            $errors = ['title' => 'Объявление не найдено.'];
+        }
+        return $view->render($response, 'adverts/edit.twig', [
+            'advert' => $advert,
+            'errors' => $errors,
+        ]
+        );
     }
 
     public function advertPage(ServerRequest $request, Response $response, array $args)
@@ -43,6 +54,9 @@ class AdvertController
         $adId = $args['id'];
         $advertsRepo = new AdvertRepository();
         $advert = $advertsRepo->getById($adId);
+        if ($advert === null) {
+            return $response->write('Объявление не найдено.');
+        }
         return $view->render($response, 'adverts/advert.twig', ['advert' => $advert]);
     }
 
