@@ -3,17 +3,20 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Http\Controllers;
+use App\Model\Entity\DatabaseConnection;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;
-use FaaPz\PDO\Database;
-use Psr\Container\ContainerInterface;
 
 
 $twig = Twig::create(__DIR__ . '/../templates', ['cache' => false]);
 $app  = AppFactory::create();
 $app->addErrorMiddleware(true, true, true);
 $app->add(TwigMiddleware::create($app, $twig));
+
+// $instance = DatabaseConnection::getInstance();
+// $app->singleton = $instance->getConnection();
+
 
 $app->get('/', Controllers\IndexController::class . ':home');
 $app->get('/adverts', Controllers\AdvertController::class . ':index');
@@ -22,7 +25,7 @@ $app->post('/adverts', Controllers\AdvertController::class . ':create');
 
 $app->get('/adverts/{id}', Controllers\AdvertController::class . ':singleAdvert');
 
-$app->get('/adverts/{id}/edit', Controllers\AdvertModificationController::class . ':index');
-$app->post('/adverts/{id}/edit', Controllers\AdvertModificationController::class . ':modify');
+$app->get('/adverts/{id}/edit', Controllers\AdvertController::class . ':modifyPage');
+$app->post('/adverts/{id}/edit', Controllers\AdvertController::class . ':modify');
 
 $app->run();

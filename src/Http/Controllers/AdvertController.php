@@ -48,22 +48,56 @@ class AdvertController
         return $response->withRedirect('/adverts');
     }
 
+    public function modify(ServerRequest $request, Response $response, array $args)
+    {
+        $id = $args['id'];
+        $repo        = new AdvertRepository();
+        $advertData  = $request->getParsedBodyParam('advert', []);
+
+        $validator = new AdvertValidator();
+        $errors    = $validator->validate($advertData);
+
+        if (!empty($errors)) {
+            $view = Twig::fromRequest($request);
+
+            return $view->render($response, 'adverts/modify.twig', [
+                'data'   => $advertData,
+                'errors' => $errors,
+            ]);
+        }
+
+        $repo->modify($advertData, $id);
+
+        return $response->withRedirect('/adverts'.'/'.$id);
+    }
+
     public function singleAdvert(ServerRequest $request, Response $response, array $args)
     {
-        $id = $args['id'] ?? '1';
+        $id = $args['id'] ?? 'error';
+        if ($id=='error') {
+            return http_response_code(404);
+        }
         $advertsRepo = new AdvertRepository();
         $adverts     = $advertsRepo->getById($id);
-        // $adverts     = $adverts->toArray();
+        $adverts     = $adverts->toArray();
+        unset($adverts['id']);
         $view = Twig::fromRequest($request);
-        $statement = [];
-        foreach ($adverts as $key => $value) {
-            if ($key=="id") {
-                continue;
-            }
-            array_push($statement, $value);
-        }
         
 
-        return $view->render($response, 'adverts/single.twig', ['advert' => $statement]);
+        return $view->render($response, 'adverts/single.twig', ['advert' => $adverts]);
+    }
+
+    public function modifyPage(ServerRequest $request, Response $response, array $args)
+    {
+        $id = $args['id'] ?? 'error';
+        if ($id=='error') {
+            return http_response_code(404);
+        }
+        $advertsRepo = new AdvertRepository();
+        $adverts     = $advertsRepo->getById($id);
+        $adverts     = $adverts->toArray();
+        $view = Twig::fromRequest($request);
+
+        return $view->render($response, 'adverts/modify.twig', ['advert' => $adverts]);
     }
 }
