@@ -47,55 +47,73 @@ class AdvertRepository
     private function getDB(): array
     {
         $connection = AdvertDatabase::getConnection();
-        $sql = $connection->query("SELECT * FROM adverts");
-        $ads = $sql->fetchAll(\PDO::FETCH_ASSOC);
+        $stmt = $connection->prepare("SELECT * FROM adverts");
+        $result = $stmt->execute();
 
-        return $ads ?? [];
+        if (!$result) {
+            return [];
+        }
+
+        $ads = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+        return $ads;
     }
 
     private function getOneDB(int $id): array
     {
         $connection = AdvertDatabase::getConnection();
-        $sql = $connection->query("SELECT * FROM adverts WHERE id = '$id'");
-        $ad = $sql->fetch(\PDO::FETCH_ASSOC);
-        if (!$ad) {
+        $stmt = $connection->prepare("SELECT * FROM adverts WHERE id = ?");
+
+        $result = $stmt->execute([$id]);
+        if (!$result) {
             return [];
         }
+        
+        $ad = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         return $ad;
     }
 
     private function saveDB(array $data):void
-    {
-        $connection = AdvertDatabase::getConnection();
-        
+    {        
         $adTitle = $data['title'];
         $adDescription = $data['description'];
         $adPrice = $data['price'];
-        $result = $connection->query(
-            "INSERT INTO adverts(title, description, price) 
-            VALUES ('{$adTitle}', '{$adDescription}', '{$adPrice}')"
-        );
 
-        if ($result == false) {
+        $connection = AdvertDatabase::getConnection();
+        $stmt = $connection->prepare("INSERT INTO adverts(title, description, price) 
+        VALUES (:title, :description, :price)");
+        $stmt->bindParam(':title', $adTitle);
+        $stmt->bindParam(':description', $adDescription);
+        $stmt->bindParam(':price', $adPrice);
+
+        $result = $stmt->execute();
+        if (!$result) {
             print("Произошла ошибка при выполнении запроса");
         }
     }
 
     private function updateDB(array $data):void
-    {
-        $connection = AdvertDatabase::getConnection();
-        
+    {        
         $adId = $data['id'];
         $adTitle = $data['title'];
         $adDescription = $data['description'];
         $adPrice = $data['price'];
-        $result = $connection->query(
-            "UPDATE adverts SET title = '{$adTitle}', description = '{$adDescription}', 
-            price = '{$adPrice}' WHERE id = {$adId}"
+
+        $connection = AdvertDatabase::getConnection();
+
+        $stmt = $connection->prepare(
+            "UPDATE adverts SET title = :title, description = :description, 
+            price = :price WHERE id = :id"
         );
 
-        if ($result == false) {
+        $stmt->bindParam(':id', $adId);
+        $stmt->bindParam(':title', $adTitle);
+        $stmt->bindParam(':description', $adDescription);
+        $stmt->bindParam(':price', $adPrice);
+
+        $result = $stmt->execute();
+        if (!$result) {
             print("Произошла ошибка при выполнении запроса");
         }
     }
@@ -103,11 +121,14 @@ class AdvertRepository
     private function deleteDB(int $adId):void
     {
         $connection = AdvertDatabase::getConnection();
-        $result = $connection->query(
-            "DELETE FROM adverts WHERE id = {$adId}"
+        
+        $stmt = $connection->prepare(
+            "DELETE FROM adverts WHERE id = :id"
         );
+        $stmt->bindParam(':id', $adId);
 
-        if ($result == false) {
+        $result = $stmt->execute();
+        if (!$result) {
             print("Произошла ошибка при выполнении запроса");
         }
     }
