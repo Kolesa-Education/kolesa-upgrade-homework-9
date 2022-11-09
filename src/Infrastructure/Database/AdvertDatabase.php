@@ -12,7 +12,6 @@ class AdvertDatabase
     private static $db_name;
 
     public static $connection;
-    public static $db_instance;
 
     protected function __construct() {
     }
@@ -27,7 +26,7 @@ class AdvertDatabase
         if (isset(self::$connection)) {
             return self;
         }
-        self::$db_instance = static::class;
+        
         self::getCredentials();
 
         try {
