@@ -32,7 +32,7 @@ class AdvertDatabase
         try {
             $fmtConnection = \sprintf("mysql:host=%s;dbname=%s;", self::$db_host, self::$db_name);
             self::$connection = new \PDO($fmtConnection, self::$db_user, self::$db_pass);
-        } catch (PDOException $pe) {
+        } catch (\PDOException $pe) {
             die("Could not connect to the database " . self::$db_name . ":" . $pe->getMessage());
         }
 
