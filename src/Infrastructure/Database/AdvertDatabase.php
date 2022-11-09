@@ -41,7 +41,7 @@ class AdvertDatabase
 
     public static function getCredentials(): void
     {
-        $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
+        $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../..');
         $dotenv->safeLoad();
         self::$db_host = $_ENV['DB_HOST'];
         self::$db_user = $_ENV['DB_USER'];
