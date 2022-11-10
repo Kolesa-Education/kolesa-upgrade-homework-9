@@ -5,14 +5,14 @@ namespace App\Model\Entity;
 class Advert
 {
     private ?int    $id;
-    private ?string $title;
+    private ?string $header;
     private ?string $description;
     private ?int    $price;
 
     public function __construct($data = [])
     {
         $this->id = $data['id'] ?? null;
-        $this->title = $data['title'] ?? null;
+        $this->header = $data['header'] ?? null;
         $this->description = $data['description'] ?? null;
         $this->price = $data['price'] ?? null;
     }
@@ -24,7 +24,7 @@ class Advert
 
     public function getTitle(): string
     {
-        return $this->title ?? '';
+        return $this->header ?? '';
     }
 
     public function getDescription(): string

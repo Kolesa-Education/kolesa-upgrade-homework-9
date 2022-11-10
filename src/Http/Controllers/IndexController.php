@@ -7,7 +7,7 @@ use Slim\Views\Twig;
 
 class IndexController
 {
-    public function home(ServerRequest $request, Response $response)
+    public function home($request, $response)
     {
         $view = Twig::fromRequest($request);
 
