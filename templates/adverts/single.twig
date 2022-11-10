@@ -1,0 +1,12 @@
+{% extends "base.twig" %}
+
+{% block body %}
+    <h1>Объявление</h1>
+
+    <ul>
+    
+        {% for data in advert %}
+            <li>{{ data }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
