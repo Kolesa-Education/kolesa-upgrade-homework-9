@@ -3,40 +3,61 @@
 namespace App\Model\Repository;
 
 use App\Model\Entity\Advert;
+use Doctrine\ORM\EntityManager;
 
 class AdvertRepository
 {
     private const DB_PATH = '../storage/adverts.json';
+    private EntityManager $em;
+
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
 
     public function getAll()
     {
-        $result = [];
-
-        foreach ($this->getDB() as $advertData) {
-            $result[] = new Advert($advertData);
-        }
-
+        $adverts = $this->em->getRepository(Advert::class)->findAll();
+        $result = array_map(function (Advert $advert) {
+            return [
+                "id" => $advert->getId(),
+                "title" => $advert->getTitle(),
+                "description" => $advert->getDescription(),
+                "price" => $advert->getPrice()
+            ];
+        }, $adverts);
         return $result;
     }
 
-    public function create(array $advertData): Advert {
-        $db               = $this->getDB();
-        $increment        = array_key_last($db) + 1;
-        $advertData['id'] = $increment;
-        $db[$increment]   = $advertData;
-
-        $this->saveDB($db);
-
-        return new Advert($advertData);
+    public function create(array $advertData): Advert
+    {
+        $newAdvert = new Advert($advertData["title"], $advertData["description"], $advertData["price"]);
+        $this->em->persist($newAdvert);
+        $this->em->flush();
+        return $newAdvert;
     }
 
-    private function getDB(): array
+
+    public function getAdvert(int $id): array
     {
-        return json_decode(file_get_contents(self::DB_PATH), true) ?? [];
+        $advert = $this->em->getRepository(Advert::class)->find(array("id" => $id));
+        $result = [
+            "id" => $advert->getId(),
+            "title" => $advert->getTitle(),
+            "description" => $advert->getDescription(),
+            "price" => $advert->getPrice()
+        ];
+        return $result;
     }
 
-    private function saveDB(array $data):void
+    public function update(array $advertData, int $id)
     {
-        file_put_contents(self::DB_PATH, json_encode($data, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT));
+        $advert = $this->em->getRepository(Advert::class)->find($id);
+        $advert->setTitle($advertData["title"]);
+        $advert->setDescription($advertData["description"]);
+        $advert->setPrice($advertData["price"]);
+        $this->em->flush();
+
+        return $advert;
     }
 }

@@ -1,11 +1,20 @@
 {% extends "base.twig" %}
 
 {% block body %}
-    <h1>Список объявлений</h1>
+	<div class="container">
+		<h1>Список объявлений</h1>
+		{% for advert in adverts %}
+			<h4>{{ advert.title }}</h4>
+			<p>{{ advert.description }}</p>
+			<p>{{ advert.price }}</p>
+			<p>
+				<a href="adverts/{{ advert.id }}">
+					<button>
+						Edit
+					</button>
+				</a>
+			</p>
+		{% endfor %}
+	</div>
 
-    <ul>
-        {% for advert in adverts %}
-            <li>{{ advert.getTitle() }}</li>
-        {% endfor %}
-    </ul>
 {% endblock %}
